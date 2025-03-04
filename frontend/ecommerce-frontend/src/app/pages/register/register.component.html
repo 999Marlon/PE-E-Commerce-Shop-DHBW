@@ -1,0 +1,82 @@
+<div class="auth-container">
+  <div class="row g-0 min-vh-100">
+    <!-- Left Side - Illustration -->
+    <div class="col-lg-6 d-none d-lg-block">
+      <div class="auth-illustration bg-gradient-primary h-100 p-5">
+        <div class="d-flex flex-column justify-content-center h-100">
+          <h2 class="display-5 fw-bold text-white mb-4">Registriere dich jetzt bei <span class="text-gradient-light">Lintage</span></h2>
+          <p class="lead text-white mb-5">Dein persönlicher Shop für Kunstartikel, Mode und mehr.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Register Form -->
+    <div class="col-lg-6">
+      <div class="auth-form-container h-100 p-4 p-md-5">
+        <div class="d-flex flex-column justify-content-center h-100">
+          <!-- Logo -->
+          <div class="text-center mb-5">
+            <i class="bi bi-lightning-charge-fill text-gradient fs-1"></i>
+            <h2 class="h3 fw-bold text-gradient mt-3">Lintage</h2>
+          </div>
+
+          <!-- Registration Form -->
+          <div class="card shadow-hover border-0 p-3 p-md-4">
+            <div class="card-body">
+              <h3 class="h4 fw-bold mb-4">Registrieren</h3>
+
+              <form (ngSubmit)="createAccount()" #registerForm="ngForm">
+
+                <!-- Username Input -->
+                <div class="mb-4">
+                  <label class="form-label text-muted">Benutzername</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-0">
+                      <i class="bi bi-person text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control border-0 bg-light" [(ngModel)]="credentials.username" name="username" placeholder="Marlon999" required>
+                  </div>
+                </div>
+
+                <!-- Email Input -->
+                <div class="mb-4">
+                  <label class="form-label text-muted">Email</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-0">
+                      <i class="bi bi-person text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control border-0 bg-light" [(ngModel)]="credentials.email" name="email" placeholder="Marlon999@marlon.com" required>
+                  </div>
+                </div>
+
+                <!-- Password Input -->
+                <div class="mb-4">
+                  <label class="form-label text-muted">Passwort</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-0">
+                      <i class="bi bi-lock text-muted"></i>
+                    </span>
+                    <input type="password" class="form-control border-0 bg-light" [(ngModel)]="credentials.password" name="password" required>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 mb-3" [disabled]="!registerForm.form.valid">
+                  <i class="bi bi-box-arrow-in-right me-2"></i>Registrieren
+                </button>
+
+                <!-- Register Link -->
+                <div class="text-center">
+                  <p class="text-muted small mb-0">
+                    Du hast bereits ein Konto? 
+                    <a href="/login" class="text-decoration-none fw-bold">Jetzt anmelden</a>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="container mt-5">
+    <h2>Produkte</h2>
+    <div class="row">
+      <div class="col-md-4" *ngFor="let product of products">
+        <div class="card">
+          <img src="https://via.placeholder.com/200" class="card-img-top" alt="Produktbild">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">{{ product.description }}</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
