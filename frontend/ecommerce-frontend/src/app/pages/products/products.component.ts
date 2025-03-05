@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { ProductsService } from '../../services/products.service';
-import { CartService } from '../../services/cart.service';
+import { ProductsService, Product } from '../../services/products.service';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from "../../navbar/navbar.component";
+import { ProductFilterComponent } from "../product-filter/product-filter.component";
 
 @Component({
-  imports: [CommonModule],
+  imports: [CommonModule, NavbarComponent, ProductFilterComponent],
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
@@ -14,8 +14,77 @@ import { CommonModule } from '@angular/common';
 export class ProductsComponent {
 
   products: any[] = [];
+  filteredProducts: Product[] = [];
+  categories: string[] = [];
+  selectedCategory: string = 'Alle';
+  searchQuery: string = '';
+  minPrice: number = 0;
+  maxPrice: number = 10000;
 
-  constructor(private productsService: ProductsService, private cartService: CartService) {}
 
+  constructor(private productService: ProductsService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    this.productService.getAllProducts().subscribe(products => {
+      this.products = products;
+      this.filteredProducts = products;
+    });
+  }
+
+  viewProduct(productId: number): void {
+    console.log(productId)
+    this.router.navigate(['/products', productId]);
+  }
+
+  filterByCategory(category: string): void {
+    console.log('🔄 Kategorie-Filter:', category);
+    this.selectedCategory = category;
+
+    if (category === 'Alle') {
+      this.loadProducts();
+    } else {
+      this.productService.getProductsByCategory(category).subscribe(products => {
+        this.filteredProducts = products;
+        console.log('✅ Gefilterte Produkte (Kategorie):', this.filteredProducts);
+      });
+    }
+  }
+
+  filterByPrice(priceRange: { min: number; max: number }): void {
+    console.log(`🔄 Preisfilter: ${priceRange.min} - ${priceRange.max}`);
+    this.minPrice = priceRange.min;
+    this.maxPrice = priceRange.max;
+
+    this.productService.filterProducts(this.minPrice, this.maxPrice).subscribe(products => {
+      this.filteredProducts = products;
+      console.log('✅ Gefilterte Produkte (Preis):', this.filteredProducts);
+    });
+  }
+
+  filterBySearch(query: string): void {
+    console.log('🔄 Suchfilter:', query);
+    this.searchQuery = query;
+
+    if (query.trim() === '') {
+      this.loadProducts();
+    } else {
+      this.productService.searchProducts(query).subscribe(products => {
+        this.filteredProducts = products;
+        console.log('✅ Gefilterte Produkte (Suche):', this.filteredProducts);
+      });
+    }
+  }
+
+  applyFilters(): void {
+    this.filteredProducts = this.products
+      .filter(p => this.selectedCategory === 'Alle' || p.category === this.selectedCategory)
+      .filter(p => p.price >= this.minPrice && p.price <= this.maxPrice)
+      .filter(p => this.searchQuery === '' || p.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
+  }
+  
 
 }
