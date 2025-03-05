@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -10,16 +10,29 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+
+  isCollapsed = false;
+  isLoggedIn = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
+  ngOnInit(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
   }
 
+  toggle() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
+  login(): void {
+    this.isLoggedIn = true; 
+    this.router.navigate(['/login']); 
+  }
+  
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.isLoggedIn = false; 
+    this.router.navigate(['/products']); 
   }
 }
