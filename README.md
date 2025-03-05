@@ -18,7 +18,6 @@ Ich habe viele Dateien lokal erstellt und dort auch fertiggestellt, deswegen sin
 - **Spring Boot**
 - **Spring Security mit JWT**
 - **PostgreSQL als Datenbank**
-- **Hibernate für ORM**
 - **Maven für Build & Dependency Management**
 
 ### Frontend (Angular)
