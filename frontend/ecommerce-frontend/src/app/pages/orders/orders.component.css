@@ -1,0 +1,22 @@
+.order-card {
+    background: #fff;
+    border-left: 5px solid #4e4376;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+    }
+  }
+  
+  .badge {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+  
+  
+  
+  
+  
