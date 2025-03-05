@@ -3,6 +3,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  category: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,12 +27,12 @@ export class ProductsService {
     });
   }
 
-  getAllProducts(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getAllProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.apiUrl);
   }
 
-  getProductById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  getProductById(id: string): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
   addProduct(product: any): Observable<any> {

@@ -20,18 +20,7 @@ export class UserService {
     });
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json' 
-    });
-  
-    return this.http.post(
-      `${this.apiUrl}/register`,
-      { username, email, password },
-      { headers } 
-    );
-  }
-  
+
   getUserById(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`, { headers: this.getHeaders()});
   }

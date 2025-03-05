@@ -3,6 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
+export interface Order {
+  id: string;
+  date?: string;
+  total?: number;
+  status: string;
+  products: { id: string; name: string; price: number; quantity: number }[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,8 +29,8 @@ export class OrderService {
     return this.http.post<any>(`${this.apiUrl}/place/${userId}`, {}, { headers: this.getHeaders() });
   }
 
-  getUserOrders(userId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${userId}`, { headers: this.getHeaders() });
+  getUserOrders(userId: string): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}/${userId}`, { headers: this.getHeaders() });
   }
 
   updateOrderStatus(orderId: string, status: string): Observable<any> {

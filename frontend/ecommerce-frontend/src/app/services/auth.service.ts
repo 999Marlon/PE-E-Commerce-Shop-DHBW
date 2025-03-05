@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 
 @Injectable({
@@ -9,15 +10,39 @@ import { Observable, tap } from 'rxjs';
 export class AuthService {
   private apiUrl = 'http://localhost:8080/auth';
 
+  private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
 
-  constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post(`${this.apiUrl}/login`, { email, password }, { headers }).pipe(
+      tap((response: any) => {
+        if (response.token) {
+          localStorage.setItem('token', response.token); 
+          localStorage.setItem('userId', response.userId);
+        }
+      })
+    );
+  }
+
+  register(username: string, email: string, password: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json' 
     });
-    return this.http.post(`${this.apiUrl}/login`, { email, password }, { headers});
+  
+    return this.http.post(
+      `${this.apiUrl}/register`,
+      { username, email, password },
+      { headers } 
+    );
   }
+
+  getUserId(): string | null {
+    return localStorage.getItem('userId'); 
+  }
+  
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
@@ -28,6 +53,9 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('token');
+    }
+    return null; 
   }
 }
