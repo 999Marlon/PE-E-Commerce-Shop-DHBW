@@ -1,0 +1,35 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-5 py-5" *ngIf="product">
+  <div class="row g-5 align-items-center">
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm product-image-card">
+        <img [src]="product!.imageUrl" class="card-img-top img-fluid rounded-3 product-image" alt="{{ product!.name }}">
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm h-100 p-4">
+        <h2 class="display-5 fw-bold text-dark mb-3">{{ product!.name }}</h2>
+        <p class="lead text-muted mb-4">{{ product!.description }}</p>
+        <h4 class="text-success fw-bold mb-4">{{ product!.price | currency:'EUR' }}</h4>
+
+        <button class="btn btn-success rounded-pill py-3 px-4 transition-effect" (click)="addToCart()">
+          <i class="bi bi-cart-plus me-2"></i> In den Warenkorb
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" [class.show]="showLoginModal">
+  <div class="modal-content text-center">
+    <h2 class="fw-bold">Anmeldung erforderlich</h2>
+    <p>Sie müssen angemeldet sein, um Produkte in den Warenkorb zu legen.</p>
+    <div class="d-flex justify-content-center gap-3">
+      <button class="btn btn-primary" (click)="goToLogin()">Zum Login</button>
+      <button class="btn btn-outline-secondary" (click)="closeModal()"> Schließen</button>
+    </div>
+  </div>
+</div>
