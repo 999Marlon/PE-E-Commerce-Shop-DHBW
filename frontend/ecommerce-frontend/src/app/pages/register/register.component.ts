@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   imports: [FormsModule, CommonModule],
@@ -28,10 +28,10 @@ export class RegisterComponent {
   };
 
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   createAccount(): void {
-    this.userService.register(this.credentials.username,this.credentials.email, this.credentials.password ).subscribe({
+    this.authService.register(this.credentials.username,this.credentials.email, this.credentials.password ).subscribe({
       next: () => {
         this.router.navigate(['/login']);
       },
