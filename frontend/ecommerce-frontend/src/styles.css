@@ -1,1 +1,69 @@
-/* You can add global styles to this file, and also import other style files */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%) !important;
+  }
+  
+  .text-gradient {
+    background: linear-gradient(45deg, #ddd, #bbb); 
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  
+  .hover-underline {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .hover-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 5px;
+    left: 50%;
+    background: #fff;
+    transition: all 0.3s ease;
+  }
+  
+  .hover-underline:hover::after {
+    width: calc(100% - 2rem);
+    left: 1rem;
+  }
+  
+  .nav-link {
+    color: rgba(255,255,255,0.85) !important;
+    font-weight: 500;
+  }
+  
+  .nav-link:hover,
+  .nav-link.active {
+    color: #fff !important;
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: none !important;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #2b5876, #4e4376);
+    border: none;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #4e4376, #2b5876);
+    transform: scale(1.05);
+  }
+  
+  .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+  }
+  
+  .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  
