@@ -11,7 +11,7 @@ Ich habe viele Dateien lokal erstellt und dort auch fertiggestellt, deswegen sin
 
 #  Projektübersicht  
 
-## 🔹 Technologien  
+## Technologien  
 
 ###  Backend (Spring Boot & PostgreSQL)
 - **Java 17+**
