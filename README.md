@@ -13,7 +13,7 @@ Ich habe viele Dateien lokal erstellt und dort auch fertiggestellt, deswegen sin
 
 ## 🔹 Technologien  
 
-### **🖥 Backend (Spring Boot & PostgreSQL)**
+###  Backend (Spring Boot & PostgreSQL)
 - **Java 17+**
 - **Spring Boot**
 - **Spring Security mit JWT**
@@ -21,7 +21,8 @@ Ich habe viele Dateien lokal erstellt und dort auch fertiggestellt, deswegen sin
 - **Hibernate für ORM**
 - **Maven für Build & Dependency Management**
 
-### ** Frontend (Angular)**
-- **Angular 19+**
+### Frontend (Angular)
+- **Angular 17+**
 - **Bootstrap für das Styling**
+
 
