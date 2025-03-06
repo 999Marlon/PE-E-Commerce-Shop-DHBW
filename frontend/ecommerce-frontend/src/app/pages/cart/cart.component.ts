@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
-import { Product } from '../../services/products.service';
+import { Product, ProductsService } from '../../services/products.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from "../../navbar/navbar.component";
 import { OrderService } from '../../services/orders.service';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -20,7 +21,7 @@ export class CartComponent implements OnInit {
   totalPrice: number = 0;
   userId: string | null = null;
 
-  constructor(private cartService: CartService, private authService: AuthService, private orderService:OrderService, private router:Router) {}
+  constructor(private cartService: CartService, private authService: AuthService, private orderService:OrderService, private router:Router, private productService:ProductsService) {}
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
@@ -31,15 +32,29 @@ export class CartComponent implements OnInit {
 
   loadCart(): void {
     this.cartService.getCart(this.userId!).subscribe(response => {
-      const groupedItems = this.groupCartItems(response.products);
-      this.cartItems = groupedItems;
-      this.calculateTotal();
+      const productIDs = response.productIds
+      this.loadProductDetails(productIDs);
+    });
+  }
+
+  loadProductDetails(productIds: string[]): void {
+    const productDetailsObservables = productIds.map(id => this.productService.getProductById(id));
+
+    forkJoin(productDetailsObservables).subscribe({
+      next: (prodcts:Product[]) => {
+        const groupedItems = this.groupCartItems(prodcts);
+        this.cartItems = groupedItems;
+        this.calculateTotal();
+      },
+      error(err) {
+        console.error('Fehler beim Laden der Produktdetails:', err);
+      }
     });
   }
 
   groupCartItems(products: Product[]): { product: Product, amount: number }[] {
     const groupedMap = new Map<string, { product: Product, amount: number }>();
-  
+
     products.forEach(product => {
       if (groupedMap.has(product.id.toString())) {
         groupedMap.get(product.id.toString())!.amount += 1;
@@ -47,7 +62,7 @@ export class CartComponent implements OnInit {
         groupedMap.set(product.id.toString(), { product, amount: 1 });
       }
     });
-  
+
     return Array.from(groupedMap.values());
   }
   
