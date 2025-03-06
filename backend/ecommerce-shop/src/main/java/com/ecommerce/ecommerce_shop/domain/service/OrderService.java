@@ -46,7 +46,7 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        cartRepository.delete(cart);
+        cartRepository.deleteById(cart.getId());
 
         return savedOrder;
     }

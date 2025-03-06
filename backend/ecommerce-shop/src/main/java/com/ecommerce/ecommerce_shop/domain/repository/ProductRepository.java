@@ -13,5 +13,5 @@ public interface ProductRepository{
     Optional<Product> findById(UUID id);
     List<Product> findAll();
     Product save(Product product);
-    void delete(Product product);
+    void deleteById(UUID uuid);
 }

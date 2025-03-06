@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce_shop.infrastructure.persistence;
 
+import com.ecommerce.ecommerce_shop.domain.entities.Category;
 import com.ecommerce.ecommerce_shop.domain.entities.Product;
 import com.ecommerce.ecommerce_shop.domain.repository.ProductRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,5 @@ import java.util.UUID;
 public interface JpaProductRepository extends JpaRepository<Product, UUID>, ProductRepository {
     List<Product> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String name, String description);
     List<Product> findByPriceBetween(double minPrice, double maxPrice);
-    List<Product> findByCategory(UUID categoryId);
+    List<Product> findByCategory(Category category);
 }

@@ -1,15 +1,16 @@
 package com.ecommerce.ecommerce_shop.domain.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import com.ecommerce.ecommerce_shop.domain.entities.User;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository{
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
+    Optional<User> findById(UUID id);
+    List<User> findAll();
+    User save(User user);
+    void deleteById(UUID id);
 }
