@@ -1,7 +1,9 @@
 package com.ecommerce.ecommerce_shop.interfaces.controller;
 
+import com.ecommerce.ecommerce_shop.application.usecase.order.GetOrdersByUserIdUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.order.PlaceOrderUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.order.UpdateOrderStatusUseCase;
 import com.ecommerce.ecommerce_shop.domain.entities.OrderStatus;
-import com.ecommerce.ecommerce_shop.domain.service.OrderService;
 import com.ecommerce.ecommerce_shop.interfaces.dto.OrderDTO;
 
 import org.springframework.http.ResponseEntity;
@@ -14,25 +16,30 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
     
-    private final OrderService orderService;
+    private final PlaceOrderUseCase placeOrderUseCase;
+    private final GetOrdersByUserIdUseCase getOrdersByUserIdUseCase;
+    private final UpdateOrderStatusUseCase updateOrderStatusUseCase;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public OrderController(PlaceOrderUseCase placeOrderUseCase,GetOrdersByUserIdUseCase getOrdersByUserIdUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase) {
+        this.placeOrderUseCase = placeOrderUseCase;
+        this.getOrdersByUserIdUseCase = getOrdersByUserIdUseCase;
+        this.updateOrderStatusUseCase = updateOrderStatusUseCase;
     }
 
     @PostMapping("/place/{userId}")
     public ResponseEntity<OrderDTO> placeOrder(@PathVariable UUID userId) {
-        return ResponseEntity.ok(orderService.placeOrder(userId)); 
+        OrderDTO orderDTO = placeOrderUseCase.execute(userId);
+        return ResponseEntity.ok(orderDTO); 
     }
 
     @GetMapping("/{userId}")
     public List<OrderDTO> getUserOrders(@PathVariable UUID userId) {
-        return orderService.getOrdersByUserId(userId);
+        return getOrdersByUserIdUseCase.execute(userId);
     }
 
     @PutMapping("/update-status/{orderId}")
     public OrderDTO updateOrderStatus(@PathVariable UUID orderId, @RequestParam OrderStatus status) {
-        return orderService.updateOrderStatus(orderId, status);
+        return updateOrderStatusUseCase.execute(orderId, status);
     }
 
 }

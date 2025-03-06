@@ -1,7 +1,9 @@
 package com.ecommerce.ecommerce_shop.interfaces.controller;
 
+import com.ecommerce.ecommerce_shop.application.usecase.category.AddCategoryUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.category.GetAllCategoriesUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.category.GetCategoryByNameUseCase;
 import com.ecommerce.ecommerce_shop.domain.entities.Category;
-import com.ecommerce.ecommerce_shop.domain.service.CategoryService;
 import com.ecommerce.ecommerce_shop.interfaces.dto.CategoryDTO;
 
 import org.springframework.web.bind.annotation.*;
@@ -12,24 +14,29 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final GetAllCategoriesUseCase getAllCategoriesUseCase;
+    private final AddCategoryUseCase addCategoryUseCase;
+    private final GetCategoryByNameUseCase getCategoryByNameUseCase;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public CategoryController(GetAllCategoriesUseCase getAllCategoriesUseCase,AddCategoryUseCase addCategoryUseCase,GetCategoryByNameUseCase getCategoryByNameUseCase) {
+        this.getAllCategoriesUseCase = getAllCategoriesUseCase;
+        this.addCategoryUseCase = addCategoryUseCase;
+        this.getCategoryByNameUseCase = getCategoryByNameUseCase;
     }
 
     @GetMapping
     public List<CategoryDTO> getAllCategories() {
-        return categoryService.getAllCategories();
+        return getAllCategoriesUseCase.execute();
     }
 
     @PostMapping("/add")
-    public CategoryDTO addCategory(@RequestBody Category category) {
-        return categoryService.addCategory(category);
+    public CategoryDTO addCategory(@RequestBody CategoryDTO categoryDTO) {
+        Category category = new Category(categoryDTO.getName());
+        return addCategoryUseCase.execute(category);
     }
 
     @GetMapping("/{name}")
     public CategoryDTO getCategoryByName(@PathVariable String name) {
-        return categoryService.getCategoryByName(name);
+        return getCategoryByNameUseCase.execute(name);
     }
 }

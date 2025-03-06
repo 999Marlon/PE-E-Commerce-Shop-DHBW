@@ -26,11 +26,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of order.products">
+            <!---
+            <tr *ngFor="let item of order.productsIds">
               <td>{{ item.name }}</td>
               <td class="text-success fw-bold">{{ item.price | currency:'EUR' }}</td>
               <td class="text-center">{{ item.quantity }}</td>
             </tr>
+          -->
           </tbody>
         </table>
       </div>

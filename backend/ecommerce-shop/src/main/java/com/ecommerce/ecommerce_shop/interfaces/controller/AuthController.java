@@ -3,9 +3,8 @@ package com.ecommerce.ecommerce_shop.interfaces.controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.ecommerce_shop.application.usecase.auth.LoginUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.user.RegisterUserUseCase;
 import com.ecommerce.ecommerce_shop.domain.entities.User;
-import com.ecommerce.ecommerce_shop.domain.service.AuthService;
-import com.ecommerce.ecommerce_shop.domain.service.UserService;
 import com.ecommerce.ecommerce_shop.interfaces.dto.UserDTO;
 
 import java.util.Map;
@@ -15,13 +14,13 @@ import java.util.Map;
 public class AuthController {
 
 
-    private final UserService userService;
     private final LoginUseCase loginUseCase;
+    private final RegisterUserUseCase registerUserUseCase;
 
 
-    public AuthController(UserService userService, AuthService authService, LoginUseCase loginUseCase) {
-        this.userService = userService;
+    public AuthController(LoginUseCase loginUseCase, RegisterUserUseCase registerUserUseCase) {
         this.loginUseCase = loginUseCase;
+        this.registerUserUseCase = registerUserUseCase;
     }
 
     @PostMapping("/login")
@@ -34,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public UserDTO registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+        return registerUserUseCase.execute(user);
     }
 
 }

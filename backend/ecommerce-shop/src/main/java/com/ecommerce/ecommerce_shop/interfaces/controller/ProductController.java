@@ -1,7 +1,14 @@
 package com.ecommerce.ecommerce_shop.interfaces.controller;
 
+import com.ecommerce.ecommerce_shop.application.usecase.product.AddProductUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.product.DeleteProductUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.product.FilterProductsUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.product.GetAllProductsUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.product.GetProductByIdUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.product.GetProductsByCategoryUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.product.SearchProductsUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.product.UpdateProductUseCase;
 import com.ecommerce.ecommerce_shop.domain.entities.Product;
-import com.ecommerce.ecommerce_shop.domain.service.ProductService;
 import com.ecommerce.ecommerce_shop.interfaces.dto.ProductDTO;
 
 import org.springframework.web.bind.annotation.*;
@@ -13,55 +20,69 @@ import java.util.UUID;
 @RequestMapping("/products")
 public class ProductController {
 
-    private ProductService productService;
+    private final GetAllProductsUseCase getAllProductsUseCase;
+    private final AddProductUseCase addProductUseCase;
+    private final GetProductByIdUseCase getProductByIdUseCase;
+    private final UpdateProductUseCase updateProductUseCase;
+    private final DeleteProductUseCase deleteProductUseCase;
+    private final SearchProductsUseCase searchProductsUseCase;
+    private final FilterProductsUseCase filterProductsUseCase;
+    private final GetProductsByCategoryUseCase getProductsByCategoryUseCase;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(GetAllProductsUseCase getAllProductsUseCase,AddProductUseCase addProductUseCase,GetProductByIdUseCase getProductByIdUseCase,UpdateProductUseCase updateProductUseCase,DeleteProductUseCase deleteProductUseCase,SearchProductsUseCase searchProductsUseCase,FilterProductsUseCase filterProductsUseCase,GetProductsByCategoryUseCase getProductsByCategoryUseCase) {
+        this.getAllProductsUseCase = getAllProductsUseCase;
+        this.addProductUseCase = addProductUseCase;
+        this.getProductByIdUseCase = getProductByIdUseCase;
+        this.updateProductUseCase = updateProductUseCase;
+        this.deleteProductUseCase = deleteProductUseCase;
+        this.searchProductsUseCase = searchProductsUseCase;
+        this.filterProductsUseCase = filterProductsUseCase;
+        this.getProductsByCategoryUseCase = getProductsByCategoryUseCase;
     }
 
     @GetMapping
     public List<ProductDTO> getAllProducts() {
-        return productService.getAllProducts();
+        return getAllProductsUseCase.execute();
     }
 
     @GetMapping("/{id}")
     public ProductDTO getProductById(@PathVariable UUID id) {
-        return productService.getProductById(id);
+        return getProductByIdUseCase.execute(id);
     }
 
     @PostMapping
     public ProductDTO createProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+        return addProductUseCase.execute(product);
     }
 
     
     @PostMapping("/add")
     public ProductDTO addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+        return addProductUseCase.execute(product);
     }
 
     @PutMapping("/update/{productId}")
     public ProductDTO updateProduct(@PathVariable UUID productId, @RequestBody Product updatedProduct) {
-        return productService.updateProduct(productId, updatedProduct);
+        return updateProductUseCase.execute(productId, updatedProduct);
     }
 
     @DeleteMapping("/delete/{productId}")
     public void deleteProduct(@PathVariable UUID productId) {
-        productService.deleteProduct(productId);
+        deleteProductUseCase.execute(productId);
     }
 
     @GetMapping("/search")
     public List<ProductDTO> searchProducts(@RequestParam String query) {
-        return productService.searchProducts(query);
+        return searchProductsUseCase.execute(query);
     }
 
     @GetMapping("/filter")
     public List<ProductDTO> filterProducts(@RequestParam double minPrice, @RequestParam double maxPrice) {
-        return productService.filterProducts(minPrice, maxPrice);
+        return filterProductsUseCase.execute(minPrice, maxPrice);
     }
 
     @GetMapping("/category/{categoryName}")
     public List<ProductDTO> getProductsByCategory(@PathVariable String categoryName) {
-        return productService.getProductsByCategory(categoryName);
+        return getProductsByCategoryUseCase.execute(categoryName);
     }
 }
