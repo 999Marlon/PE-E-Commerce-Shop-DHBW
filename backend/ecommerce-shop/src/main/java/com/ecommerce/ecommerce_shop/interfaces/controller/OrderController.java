@@ -1,8 +1,8 @@
 package com.ecommerce.ecommerce_shop.interfaces.controller;
 
-import com.ecommerce.ecommerce_shop.domain.entities.Order;
 import com.ecommerce.ecommerce_shop.domain.entities.OrderStatus;
 import com.ecommerce.ecommerce_shop.domain.service.OrderService;
+import com.ecommerce.ecommerce_shop.interfaces.dto.OrderDTO;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +21,17 @@ public class OrderController {
     }
 
     @PostMapping("/place/{userId}")
-    public ResponseEntity<Order> placeOrder(@PathVariable UUID userId) {
-        Order order = orderService.placeOrder(userId);
-        return ResponseEntity.ok(order); 
+    public ResponseEntity<OrderDTO> placeOrder(@PathVariable UUID userId) {
+        return ResponseEntity.ok(orderService.placeOrder(userId)); 
     }
 
     @GetMapping("/{userId}")
-    public List<Order> getUserOrders(@PathVariable UUID userId) {
+    public List<OrderDTO> getUserOrders(@PathVariable UUID userId) {
         return orderService.getOrdersByUserId(userId);
     }
 
     @PutMapping("/update-status/{orderId}")
-    public Order updateOrderStatus(@PathVariable UUID orderId, @RequestParam OrderStatus status) {
+    public OrderDTO updateOrderStatus(@PathVariable UUID orderId, @RequestParam OrderStatus status) {
         return orderService.updateOrderStatus(orderId, status);
     }
 

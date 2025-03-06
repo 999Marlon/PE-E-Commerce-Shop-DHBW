@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.service.AuthService;
 import com.ecommerce.ecommerce_shop.domain.service.UserService;
+import com.ecommerce.ecommerce_shop.interfaces.dto.UserDTO;
 
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
+    public UserDTO registerUser(@RequestBody User user) {
         return userService.registerUser(user);
     }
 

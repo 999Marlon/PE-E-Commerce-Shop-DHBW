@@ -2,6 +2,8 @@ package com.ecommerce.ecommerce_shop.interfaces.controller;
 
 import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.service.UserService;
+import com.ecommerce.ecommerce_shop.interfaces.dto.UserDTO;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -17,12 +19,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable UUID id) {
+    public UserDTO getUserById(@PathVariable UUID id) {
         return userService.getUserById(id);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable UUID id, @RequestBody User updatedUser) {
+    public UserDTO updateUser(@PathVariable UUID id, @RequestBody User updatedUser) {
         return userService.updateUser(id, updatedUser);
     }
 

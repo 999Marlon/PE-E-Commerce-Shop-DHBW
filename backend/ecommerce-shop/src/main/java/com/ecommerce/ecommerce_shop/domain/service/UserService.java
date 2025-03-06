@@ -2,6 +2,9 @@ package com.ecommerce.ecommerce_shop.domain.service;
 
 import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.repository.UserRepository;
+import com.ecommerce.ecommerce_shop.interfaces.dto.UserDTO;
+import com.ecommerce.ecommerce_shop.interfaces.mappers.UserMapper;
+
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -15,26 +18,27 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User registerUser(User user) {
+    public UserDTO registerUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
         }
-        return userRepository.save(user); 
+        return UserMapper.toDTO(userRepository.save(user)); 
     }
 
-    public User getUserById(UUID id) {
-        return userRepository.findById(id)
+    public UserDTO getUserById(UUID id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        return UserMapper.toDTO(user);
     }
 
-    public User updateUser(UUID id, User updatedUser) {
+    public UserDTO updateUser(UUID id, User updatedUser) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setEmail(updatedUser.getEmail());
 
-        return userRepository.save(existingUser);
+        return UserMapper.toDTO(userRepository.save(existingUser));
     }
 
     public void deleteUser(UUID id) {

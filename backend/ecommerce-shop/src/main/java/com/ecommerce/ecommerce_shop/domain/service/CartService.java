@@ -6,6 +6,8 @@ import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.repository.CartRepository;
 import com.ecommerce.ecommerce_shop.domain.repository.ProductRepository;
 import com.ecommerce.ecommerce_shop.domain.repository.UserRepository;
+import com.ecommerce.ecommerce_shop.interfaces.dto.CartDTO;
+import com.ecommerce.ecommerce_shop.interfaces.mappers.CartMapper;
 
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ public class CartService {
         this.userRepository = userRepository;
     }
 
-    public Cart addToCart(UUID userId, UUID productId) {
+    public CartDTO addToCart(UUID userId, UUID productId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     
@@ -45,23 +47,24 @@ public class CartService {
         }
     
         cart.getProducts().add(product);
-        return cartRepository.save(cart);
+        return CartMapper.toDTO(cartRepository.save(cart));
     }
     
-    public Cart getCartByUserId(UUID userId) {
+    public CartDTO getCartByUserId(UUID userId) {
         return cartRepository.findByUserId(userId)
+                .map(CartMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("Cart not found for user ID: " + userId));
     }
 
-    public Cart removeFromCart(UUID userId, UUID productId) {
+    public CartDTO removeFromCart(UUID userId, UUID productId) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found for user ID: " + userId));
 
         cart.getProducts().removeIf(product -> product.getId().equals(productId));
-        return cartRepository.save(cart);
+        return CartMapper.toDTO(cartRepository.save(cart));
     }
 
-    public Cart updateProductQuantity(UUID userId, UUID productId, int quantity) {
+    public CartDTO updateProductQuantity(UUID userId, UUID productId, int quantity) {
         if (quantity < 1) {
             return removeFromCart(userId, productId);
         }
@@ -72,17 +75,15 @@ public class CartService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Füge die gewünschte Menge hinzu
         List<Product> updatedProducts = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
             updatedProducts.add(product);
         }
 
-        // Entferne das alte Produkt und füge die neue Menge ein
         cart.getProducts().removeIf(p -> p.getId().equals(productId));
         cart.getProducts().addAll(updatedProducts);
 
-        return cartRepository.save(cart);
+        return CartMapper.toDTO(cartRepository.save(cart));
     }
     
 }

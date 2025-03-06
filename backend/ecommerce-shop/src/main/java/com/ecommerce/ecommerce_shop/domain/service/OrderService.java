@@ -6,10 +6,14 @@ import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.repository.CartRepository;
 import com.ecommerce.ecommerce_shop.domain.repository.OrderRepository;
 import com.ecommerce.ecommerce_shop.domain.repository.UserRepository;
+import com.ecommerce.ecommerce_shop.interfaces.dto.OrderDTO;
+import com.ecommerce.ecommerce_shop.interfaces.mappers.OrderMapper;
 
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +32,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order placeOrder(UUID userId) {
+    public OrderDTO placeOrder(UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -48,20 +52,23 @@ public class OrderService {
 
         cartRepository.deleteById(cart.getId());
 
-        return savedOrder;
+        return OrderMapper.toDTO(savedOrder);
     }
 
     
-    public List<Order> getOrdersByUserId(UUID userId) {
-        return orderRepository.findByUserId(userId);
+    public List<OrderDTO> getOrdersByUserId(UUID userId) {
+        return orderRepository.findByUserId(userId)
+                .stream()
+                .map(OrderMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Order updateOrderStatus(UUID orderId, OrderStatus status) {
+    public OrderDTO updateOrderStatus(UUID orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new RuntimeException("Order not found"));
     
         order.setStatus(status);
-        return orderRepository.save(order);
+        return OrderMapper.toDTO(orderRepository.save(order));
     }
 
 }
