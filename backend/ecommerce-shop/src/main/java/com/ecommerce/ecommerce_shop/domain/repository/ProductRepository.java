@@ -1,7 +1,8 @@
 package com.ecommerce.ecommerce_shop.domain.repository;
 
-import com.ecommerce.ecommerce_shop.domain.model.Category;
-import com.ecommerce.ecommerce_shop.domain.model.Product;
+import com.ecommerce.ecommerce_shop.domain.entities.Category;
+import com.ecommerce.ecommerce_shop.domain.entities.Product;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,8 +1,8 @@
 package com.ecommerce.ecommerce_shop.domain.service;
 
-import com.ecommerce.ecommerce_shop.domain.model.Cart;
-import com.ecommerce.ecommerce_shop.domain.model.Product;
-import com.ecommerce.ecommerce_shop.domain.model.User;
+import com.ecommerce.ecommerce_shop.domain.entities.Cart;
+import com.ecommerce.ecommerce_shop.domain.entities.Product;
+import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.repository.CartRepository;
 import com.ecommerce.ecommerce_shop.domain.repository.ProductRepository;
 import com.ecommerce.ecommerce_shop.domain.repository.UserRepository;

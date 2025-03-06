@@ -1,7 +1,6 @@
 package com.ecommerce.ecommerce_shop.config;
 
 import org.springframework.context.annotation.Bean;
-import com.ecommerce.ecommerce_shop.domain.model.JwtFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -7756,3 +7756,79 @@ java.lang.RuntimeException: Cart not found for user ID: dcad6d62-8ede-4821-9091-
 2025-03-05T19:30:26.536+01:00 DEBUG 11296 --- [ecommerce-shop] [http-nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
 2025-03-05T19:30:26.538+01:00 DEBUG 11296 --- [ecommerce-shop] [http-nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Writing [Cart(id=860929d7-b04d-4b85-9c12-50e0853957fa, user=com.ecommerce.ecommerce_shop.domain.model.User@39 (truncated)...]
 2025-03-05T19:30:26.539+01:00 DEBUG 11296 --- [ecommerce-shop] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-03-06T12:57:53.526+01:00  INFO 6504 --- [ecommerce-shop] [main] c.e.e.EcommerceShopApplicationTests      : Starting EcommerceShopApplicationTests using Java 18.0.2.1 with PID 6504 (started by Luca in C:\Users\Luca\Desktop\dev\PE-E-Commerce-Shop\backend\ecommerce-shop)
+2025-03-06T12:57:53.527+01:00  INFO 6504 --- [ecommerce-shop] [main] c.e.e.EcommerceShopApplicationTests      : No active profile set, falling back to 1 default profile: "default"
+2025-03-06T12:57:53.555+01:00 DEBUG 6504 --- [ecommerce-shop] [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@3e36b7a0
+2025-03-06T12:57:54.048+01:00  INFO 6504 --- [ecommerce-shop] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-06T12:57:54.106+01:00  INFO 6504 --- [ecommerce-shop] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 50 ms. Found 5 JPA repository interfaces.
+2025-03-06T12:57:54.457+01:00  INFO 6504 --- [ecommerce-shop] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-03-06T12:57:54.743+01:00  INFO 6504 --- [ecommerce-shop] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7573c7b5
+2025-03-06T12:57:54.745+01:00  INFO 6504 --- [ecommerce-shop] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-03-06T12:57:54.881+01:00  INFO 6504 --- [ecommerce-shop] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-06T12:57:54.941+01:00  INFO 6504 --- [ecommerce-shop] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.8.Final
+2025-03-06T12:57:54.974+01:00  INFO 6504 --- [ecommerce-shop] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-03-06T12:57:55.112+01:00  INFO 6504 --- [ecommerce-shop] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-06T12:57:55.177+01:00  WARN 6504 --- [ecommerce-shop] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-06T12:57:55.191+01:00  INFO 6504 --- [ecommerce-shop] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-03-06T12:57:55.926+01:00  INFO 6504 --- [ecommerce-shop] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-06T12:57:56.313+01:00  INFO 6504 --- [ecommerce-shop] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-06T12:57:56.667+01:00  WARN 6504 --- [ecommerce-shop] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-06T12:57:56.681+01:00 DEBUG 6504 --- [ecommerce-shop] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-03-06T12:57:56.823+01:00 DEBUG 6504 --- [ecommerce-shop] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 26 mappings in 'requestMappingHandlerMapping'
+2025-03-06T12:57:56.923+01:00 DEBUG 6504 --- [ecommerce-shop] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-03-06T12:57:56.968+01:00 DEBUG 6504 --- [ecommerce-shop] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-03-06T12:57:57.111+01:00 DEBUG 6504 --- [ecommerce-shop] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-06T12:57:57.148+01:00 DEBUG 6504 --- [ecommerce-shop] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-06T12:57:57.217+01:00  INFO 6504 --- [ecommerce-shop] [main] c.e.e.EcommerceShopApplicationTests      : Started EcommerceShopApplicationTests in 3.942 seconds (process running for 5.647)
+2025-03-06T12:57:57.256+01:00 DEBUG 6504 --- [ecommerce-shop] [SpringApplicationShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@3e36b7a0, started on Thu Mar 06 12:57:53 CET 2025
+2025-03-06T12:57:57.259+01:00  INFO 6504 --- [ecommerce-shop] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-06T12:57:57.262+01:00  INFO 6504 --- [ecommerce-shop] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-03-06T12:57:57.265+01:00  INFO 6504 --- [ecommerce-shop] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-03-06T12:58:01.882+01:00  INFO 12516 --- [ecommerce-shop] [main] c.e.e.EcommerceShopApplication           : Starting EcommerceShopApplication using Java 18.0.2.1 with PID 12516 (C:\Users\Luca\Desktop\dev\PE-E-Commerce-Shop\backend\ecommerce-shop\target\classes started by Luca in C:\Users\Luca\Desktop\dev\PE-E-Commerce-Shop\backend\ecommerce-shop)
+2025-03-06T12:58:01.884+01:00  INFO 12516 --- [ecommerce-shop] [main] c.e.e.EcommerceShopApplication           : No active profile set, falling back to 1 default profile: "default"
+2025-03-06T12:58:02.347+01:00  INFO 12516 --- [ecommerce-shop] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-06T12:58:02.404+01:00  INFO 12516 --- [ecommerce-shop] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 49 ms. Found 5 JPA repository interfaces.
+2025-03-06T12:58:02.817+01:00  INFO 12516 --- [ecommerce-shop] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-06T12:58:02.829+01:00  INFO 12516 --- [ecommerce-shop] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-06T12:58:02.830+01:00  INFO 12516 --- [ecommerce-shop] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-03-06T12:58:02.880+01:00  INFO 12516 --- [ecommerce-shop] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-03-06T12:58:02.881+01:00  INFO 12516 --- [ecommerce-shop] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 968 ms
+2025-03-06T12:58:02.965+01:00  INFO 12516 --- [ecommerce-shop] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-03-06T12:58:03.105+01:00  INFO 12516 --- [ecommerce-shop] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@691124ee
+2025-03-06T12:58:03.106+01:00  INFO 12516 --- [ecommerce-shop] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-03-06T12:58:03.185+01:00  INFO 12516 --- [ecommerce-shop] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-06T12:58:03.237+01:00  INFO 12516 --- [ecommerce-shop] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.8.Final
+2025-03-06T12:58:03.266+01:00  INFO 12516 --- [ecommerce-shop] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-03-06T12:58:03.492+01:00  INFO 12516 --- [ecommerce-shop] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-06T12:58:03.543+01:00  WARN 12516 --- [ecommerce-shop] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-06T12:58:03.556+01:00  INFO 12516 --- [ecommerce-shop] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-03-06T12:58:04.296+01:00  INFO 12516 --- [ecommerce-shop] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-06T12:58:04.659+01:00  INFO 12516 --- [ecommerce-shop] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-06T12:58:04.939+01:00  WARN 12516 --- [ecommerce-shop] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-06T12:58:04.950+01:00 DEBUG 12516 --- [ecommerce-shop] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-03-06T12:58:05.050+01:00 DEBUG 12516 --- [ecommerce-shop] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 26 mappings in 'requestMappingHandlerMapping'
+2025-03-06T12:58:05.105+01:00 DEBUG 12516 --- [ecommerce-shop] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-03-06T12:58:05.135+01:00 DEBUG 12516 --- [ecommerce-shop] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-03-06T12:58:05.181+01:00 DEBUG 12516 --- [ecommerce-shop] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-06T12:58:05.223+01:00 DEBUG 12516 --- [ecommerce-shop] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-06T12:58:05.293+01:00  INFO 12516 --- [ecommerce-shop] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-03-06T12:58:05.300+01:00  INFO 12516 --- [ecommerce-shop] [main] c.e.e.EcommerceShopApplication           : Started EcommerceShopApplication in 3.771 seconds (process running for 4.048)
+2025-03-06T13:06:16.263+01:00  INFO 12516 --- [ecommerce-shop] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-03-06T13:06:16.299+01:00  INFO 12516 --- [ecommerce-shop] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-03-06T13:06:16.302+01:00  INFO 12516 --- [ecommerce-shop] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-06T13:06:16.303+01:00  INFO 12516 --- [ecommerce-shop] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-03-06T13:06:16.306+01:00  INFO 12516 --- [ecommerce-shop] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

@@ -1,7 +1,8 @@
 package com.ecommerce.ecommerce_shop.domain.service;
 
 import java.util.List;
-import com.ecommerce.ecommerce_shop.domain.model.Category;
+
+import com.ecommerce.ecommerce_shop.domain.entities.Category;
 import com.ecommerce.ecommerce_shop.domain.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 

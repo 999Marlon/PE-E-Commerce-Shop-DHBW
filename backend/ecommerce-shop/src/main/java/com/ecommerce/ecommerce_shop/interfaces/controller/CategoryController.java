@@ -1,6 +1,6 @@
 package com.ecommerce.ecommerce_shop.interfaces.controller;
 
-import com.ecommerce.ecommerce_shop.domain.model.Category;
+import com.ecommerce.ecommerce_shop.domain.entities.Category;
 import com.ecommerce.ecommerce_shop.domain.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 

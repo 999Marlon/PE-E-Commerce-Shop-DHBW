@@ -1,7 +1,7 @@
 package com.ecommerce.ecommerce_shop.domain.service;
 
-import com.ecommerce.ecommerce_shop.domain.model.Order;
-import com.ecommerce.ecommerce_shop.domain.model.OrderStatus;
+import com.ecommerce.ecommerce_shop.domain.entities.Order;
+import com.ecommerce.ecommerce_shop.domain.entities.OrderStatus;
 import com.ecommerce.ecommerce_shop.domain.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

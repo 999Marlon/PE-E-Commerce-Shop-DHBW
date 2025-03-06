@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerce_shop.domain.model;
+package com.ecommerce.ecommerce_shop.domain.valueobjects;
 
 import jakarta.persistence.Embeddable;
 import lombok.Data;

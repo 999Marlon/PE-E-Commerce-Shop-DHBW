@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerce_shop.domain.model;
+package com.ecommerce.ecommerce_shop.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

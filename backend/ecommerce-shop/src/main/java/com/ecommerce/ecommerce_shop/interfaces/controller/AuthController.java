@@ -2,7 +2,7 @@ package com.ecommerce.ecommerce_shop.interfaces.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.ecommerce.ecommerce_shop.domain.model.User;
+import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.service.AuthService;
 import com.ecommerce.ecommerce_shop.domain.service.UserService;
 

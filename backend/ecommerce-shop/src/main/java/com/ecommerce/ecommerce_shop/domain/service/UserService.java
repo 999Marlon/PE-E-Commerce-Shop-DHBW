@@ -1,6 +1,6 @@
 package com.ecommerce.ecommerce_shop.domain.service;
 
-import com.ecommerce.ecommerce_shop.domain.model.User;
+import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 

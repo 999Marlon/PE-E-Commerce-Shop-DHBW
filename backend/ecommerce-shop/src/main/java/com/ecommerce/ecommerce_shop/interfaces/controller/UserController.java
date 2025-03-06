@@ -1,6 +1,6 @@
 package com.ecommerce.ecommerce_shop.interfaces.controller;
 
-import com.ecommerce.ecommerce_shop.domain.model.User;
+import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.service.UserService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,9 @@
 package com.ecommerce.ecommerce_shop.domain.service;
 
-import com.ecommerce.ecommerce_shop.domain.model.Product;
 import com.ecommerce.ecommerce_shop.domain.repository.CategoryRepository;
 import com.ecommerce.ecommerce_shop.domain.repository.ProductRepository;
-import com.ecommerce.ecommerce_shop.domain.model.Category;
+import com.ecommerce.ecommerce_shop.domain.entities.Category;
+import com.ecommerce.ecommerce_shop.domain.entities.Product;
 
 import org.springframework.stereotype.Service;
 

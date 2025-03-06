@@ -1,8 +1,10 @@
 package com.ecommerce.ecommerce_shop.domain.repository;
 
-import com.ecommerce.ecommerce_shop.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.ecommerce.ecommerce_shop.domain.entities.User;
+
 import java.util.Optional;
 import java.util.UUID;
 

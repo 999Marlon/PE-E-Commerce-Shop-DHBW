@@ -1,7 +1,7 @@
 package com.ecommerce.ecommerce_shop.interfaces.controller;
 
-import com.ecommerce.ecommerce_shop.domain.model.Order;
-import com.ecommerce.ecommerce_shop.domain.model.OrderStatus;
+import com.ecommerce.ecommerce_shop.domain.entities.Order;
+import com.ecommerce.ecommerce_shop.domain.entities.OrderStatus;
 import com.ecommerce.ecommerce_shop.domain.service.OrderService;
 
 import org.springframework.http.ResponseEntity;
