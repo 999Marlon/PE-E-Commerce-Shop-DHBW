@@ -2,6 +2,7 @@ package com.ecommerce.ecommerce_shop.interfaces.controller;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.ecommerce.ecommerce_shop.application.usecase.auth.LoginUseCase;
 import com.ecommerce.ecommerce_shop.domain.entities.User;
 import com.ecommerce.ecommerce_shop.domain.service.AuthService;
 import com.ecommerce.ecommerce_shop.domain.service.UserService;
@@ -14,12 +15,13 @@ import java.util.Map;
 public class AuthController {
 
 
-    private AuthService authService;
     private final UserService userService;
+    private final LoginUseCase loginUseCase;
 
-    public AuthController(UserService userService, AuthService authService) {
+
+    public AuthController(UserService userService, AuthService authService, LoginUseCase loginUseCase) {
         this.userService = userService;
-        this.authService = authService;
+        this.loginUseCase = loginUseCase;
     }
 
     @PostMapping("/login")
@@ -27,7 +29,7 @@ public class AuthController {
         String email = request.get("email");
         String password = request.get("password");
 
-        return authService.login(email, password);
+        return loginUseCase.execute(email, password);
     }
 
     @PostMapping("/register")

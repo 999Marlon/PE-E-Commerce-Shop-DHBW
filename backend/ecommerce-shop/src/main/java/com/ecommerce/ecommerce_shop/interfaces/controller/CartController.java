@@ -1,6 +1,9 @@
 package com.ecommerce.ecommerce_shop.interfaces.controller;
 
-import com.ecommerce.ecommerce_shop.domain.service.CartService;
+import com.ecommerce.ecommerce_shop.application.usecase.cart.AddProductToCartUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.cart.GetCartUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.cart.RemoveProductFromCartUseCase;
+import com.ecommerce.ecommerce_shop.application.usecase.cart.UpdateProductQuantityUseCase;
 import com.ecommerce.ecommerce_shop.interfaces.dto.CartDTO;
 
 import org.springframework.web.bind.annotation.*;
@@ -11,30 +14,37 @@ import java.util.UUID;
 @RequestMapping("/cart")
 public class CartController {
 
-    private CartService cartService;
+    private final AddProductToCartUseCase addProductToCartUseCase;
+    private final GetCartUseCase getCartUseCase;
+    private final RemoveProductFromCartUseCase removeProductFromCartUseCase;
+    private final UpdateProductQuantityUseCase updateProductQuantityUseCase;
 
-    public CartController(CartService cartService) {
-        this.cartService = cartService;
+    public CartController(AddProductToCartUseCase addProductToCartUseCase,GetCartUseCase getCartUseCase,RemoveProductFromCartUseCase removeProductFromCartUseCase,UpdateProductQuantityUseCase updateProductQuantityUseCase) {
+        this.addProductToCartUseCase = addProductToCartUseCase;
+        this.getCartUseCase = getCartUseCase;
+        this.removeProductFromCartUseCase = removeProductFromCartUseCase;
+        this.updateProductQuantityUseCase = updateProductQuantityUseCase;
     }
+
 
     @PostMapping("/{userId}/add/{productId}")
     public CartDTO addToCart(@PathVariable UUID userId, @PathVariable UUID productId) {
-        return cartService.addToCart(userId, productId);
+        return addProductToCartUseCase.execute(userId, productId);
     }
 
     @GetMapping("/{userId}")
     public CartDTO getCart(@PathVariable UUID userId) {
-        return cartService.getCartByUserId(userId);
+        return getCartUseCase.execute(userId);
     }
 
 
     @DeleteMapping("/{userId}/remove/{productId}")
     public CartDTO removeFromCart(@PathVariable UUID userId, @PathVariable UUID productId) {
-        return cartService.removeFromCart(userId, productId);
+        return removeProductFromCartUseCase.execute(userId, productId);
     }
 
     @PutMapping("/{userId}/update-quantity/{productId}")
     public CartDTO updateProductQuantity(@PathVariable UUID userId, @PathVariable UUID productId, @RequestParam int quantity) {
-        return cartService.updateProductQuantity(userId, productId, quantity);
+        return updateProductQuantityUseCase.execute(userId, productId, quantity);
     }
 }

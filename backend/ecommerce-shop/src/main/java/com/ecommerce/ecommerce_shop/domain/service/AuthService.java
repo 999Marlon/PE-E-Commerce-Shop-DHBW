@@ -26,10 +26,10 @@ public class AuthService {
             throw new RuntimeException("Invalid password");
         }
 
-        String token = jwtUtil.generateToken(user.getId().toString()); // Token mit userId generieren
+        String token = jwtUtil.generateToken(user.getId().toString()); 
         return Map.of(
             "token", token,
-            "userId", user.getId().toString() // ✅ Gibt jetzt auch die `userId` zurück
+            "userId", user.getId().toString()
         );
     }
 }
