@@ -5,10 +5,11 @@ import { AuthService } from './auth.service';
 
 export interface Order {
   id: string;
+  userId: string;
   date?: string;
   total?: number;
   status: string;
-  products: { id: string; name: string; price: number; quantity: number }[];
+  productIds: string[];
 }
 
 @Injectable({

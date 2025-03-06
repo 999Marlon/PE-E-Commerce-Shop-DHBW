@@ -3,7 +3,8 @@ import { OrderService, Order } from '../../services/orders.service';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { NavbarComponent } from "../../navbar/navbar.component";
-
+import { forkJoin, map } from 'rxjs';
+import { ProductsService, Product } from '../../services/products.service';
 
 @Component({
   selector: 'app-orders',
@@ -16,7 +17,7 @@ export class OrdersComponent implements OnInit {
   orders: Order[] = [];
   userId: string | null = null;
 
-  constructor(private orderService: OrderService, private authService: AuthService) {}
+  constructor(private orderService: OrderService, private authService: AuthService, private prouctService:ProductsService) {}
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
@@ -28,16 +29,29 @@ export class OrdersComponent implements OnInit {
   loadOrders(): void {
     this.orderService.getUserOrders(this.userId!).subscribe({
       next: (orders) => {
-        this.orders = orders.map(order => ({
-          ...order,
-          products: this.groupOrderItems(order.products) 
-        }));
+        const orderRequests = orders.map(order => {
+          const productDetailsObservables = order.productIds.map((id: string) => this.prouctService.getProductById(id));
+
+          return forkJoin(productDetailsObservables).pipe(
+            map((productDetails:Product[]) => ({
+              ...order,
+              products: this.groupOrderItems(productDetails) 
+            }))
+          );
+        });
+
+        forkJoin(orderRequests).subscribe({
+          next: (orderDetails) => {
+            this.orders = orderDetails;
+          },
+          error: (err) => console.error('Fehler beim Laden der Bestellungen:', err)
+        });
       },
       error: (err) => console.error('Fehler beim Laden der Bestellungen:', err)
     });
   }
-
-  groupOrderItems(products: { id: string; name: string; price: number }[]): { id: string; name: string; price: number; quantity: number }[] {
+  
+  groupOrderItems(products: any[]): { id: string; name: string; price: number; quantity: number }[] {
     const groupedMap = new Map<string, { id: string; name: string; price: number; quantity: number }>();
 
     products.forEach(product => {
