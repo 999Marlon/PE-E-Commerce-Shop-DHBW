@@ -36,12 +36,10 @@ export class ProductsComponent {
   }
 
   viewProduct(productId: number): void {
-    console.log(productId)
     this.router.navigate(['/products', productId]);
   }
 
   filterByCategory(category: string): void {
-    console.log('🔄 Kategorie-Filter:', category);
     this.selectedCategory = category;
 
     if (category === 'Alle') {
@@ -49,24 +47,20 @@ export class ProductsComponent {
     } else {
       this.productService.getProductsByCategory(category).subscribe(products => {
         this.filteredProducts = products;
-        console.log('✅ Gefilterte Produkte (Kategorie):', this.filteredProducts);
       });
     }
   }
 
   filterByPrice(priceRange: { min: number; max: number }): void {
-    console.log(`🔄 Preisfilter: ${priceRange.min} - ${priceRange.max}`);
     this.minPrice = priceRange.min;
     this.maxPrice = priceRange.max;
 
     this.productService.filterProducts(this.minPrice, this.maxPrice).subscribe(products => {
       this.filteredProducts = products;
-      console.log('✅ Gefilterte Produkte (Preis):', this.filteredProducts);
     });
   }
 
   filterBySearch(query: string): void {
-    console.log('🔄 Suchfilter:', query);
     this.searchQuery = query;
 
     if (query.trim() === '') {
@@ -74,7 +68,6 @@ export class ProductsComponent {
     } else {
       this.productService.searchProducts(query).subscribe(products => {
         this.filteredProducts = products;
-        console.log('✅ Gefilterte Produkte (Suche):', this.filteredProducts);
       });
     }
   }

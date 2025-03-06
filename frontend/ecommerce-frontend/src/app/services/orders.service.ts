@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { Product } from './products.service';
 
 export interface Order {
   id: string;
@@ -10,6 +11,12 @@ export interface Order {
   total?: number;
   status: string;
   productIds: string[];
+  products?: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
 }
 
 @Injectable({

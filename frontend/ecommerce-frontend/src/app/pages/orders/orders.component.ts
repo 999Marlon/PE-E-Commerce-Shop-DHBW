@@ -43,6 +43,7 @@ export class OrdersComponent implements OnInit {
         forkJoin(orderRequests).subscribe({
           next: (orderDetails) => {
             this.orders = orderDetails;
+            console.log(this.orders)
           },
           error: (err) => console.error('Fehler beim Laden der Bestellungen:', err)
         });
@@ -61,7 +62,6 @@ export class OrdersComponent implements OnInit {
         groupedMap.set(product.id, { ...product, quantity: 1 });
       }
     });
-
     return Array.from(groupedMap.values());
   }
 
