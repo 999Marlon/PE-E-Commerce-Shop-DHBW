@@ -8,6 +8,7 @@ public class ProductDTO {
     private String name;
     private String description;
     private double price;
+    private String imageUrl;  
     private UUID categoryId;
     
     public UUID getId() {
@@ -31,9 +32,11 @@ public class ProductDTO {
     public double getPrice() {
         return price;
     }
-    public void setPrice(double price) {
-        this.price = price;
-    }
+    public void setPrice(double price) {this.price = price;}
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
     public UUID getCategoryId() {
         return categoryId;
     }
