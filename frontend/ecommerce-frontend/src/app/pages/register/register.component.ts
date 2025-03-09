@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   imports: [FormsModule, CommonModule],
@@ -28,10 +29,10 @@ export class RegisterComponent {
   };
 
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   createAccount(): void {
-    this.authService.register(this.credentials.username,this.credentials.email, this.credentials.password ).subscribe({
+    this.userService.register(this.credentials.username,this.credentials.email, this.credentials.password ).subscribe({
       next: () => {
         this.router.navigate(['/login']);
       },

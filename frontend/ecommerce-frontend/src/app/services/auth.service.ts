@@ -27,18 +27,6 @@ export class AuthService {
     );
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json' 
-    });
-  
-    return this.http.post(
-      `${this.apiUrl}/register`,
-      { username, email, password },
-      { headers } 
-    );
-  }
-
   getUserId(): string | null {
     return localStorage.getItem('userId'); 
   }
