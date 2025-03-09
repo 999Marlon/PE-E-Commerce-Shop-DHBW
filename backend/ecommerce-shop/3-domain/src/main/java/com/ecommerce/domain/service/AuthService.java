@@ -1,6 +1,7 @@
 package com.ecommerce.domain.service;
 
 import com.ecommerce.domain.security.JwtProvider;
+import com.ecommerce.domain.valueobjects.Email;
 import com.ecommerce.domain.dto.LoginResult;
 import com.ecommerce.domain.entities.User;
 import com.ecommerce.domain.exceptions.InvalidCredentialsException;
@@ -19,11 +20,11 @@ public class AuthService {
         this.jwtProvider = jwtProvider;
     }
 
-    public LoginResult login(String email, String password) {
+    public LoginResult login(Email email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Benutzer nicht gefunden."));
 
-        if (!user.getPassword().equals(password) || !user.getEmail().equals(email)) {
+        if (!user.getPassword().equals(password) || !user.getEmail().toString().equals(email.toString())) {
             throw new InvalidCredentialsException("Falsche Anmeldedaten. Überprüfen Sie ihr Passwort oder Email Adresse.");
         }
 

@@ -1,21 +1,23 @@
 package com.ecommerce.domain.dto;
 
+import com.ecommerce.domain.valueobjects.Email;
+
 public class AuthRequestDTO {
-    private String email;
+    private Email email;
     private String password;
 
     public AuthRequestDTO() {}
 
-    public AuthRequestDTO(String email, String password) {
+    public AuthRequestDTO(Email email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 
