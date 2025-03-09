@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
+import { NavbarComponent } from "../../navbar/navbar.component";
 
 @Component({
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, NavbarComponent],
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
@@ -36,8 +37,8 @@ export class RegisterComponent {
       next: () => {
         this.router.navigate(['/login']);
       },
-      error: () => {
-        this.errorMessage = 'Registrierung fehlgeschlagen. Bitte überprüfe deine Eingaben.';
+      error: (error) => {
+        this.errorMessage = error.error || 'Login fehlgeschlagen';
       },
     });
   }

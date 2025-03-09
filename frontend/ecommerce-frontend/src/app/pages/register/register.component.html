@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <div class="auth-container">
   <div class="row g-0 min-vh-100">
     <div class="col-lg-6 d-none d-lg-block">
@@ -12,10 +14,10 @@
     <div class="col-lg-6">
       <div class="auth-form-container h-100 p-4 p-md-5">
         <div class="d-flex flex-column justify-content-center h-100">
-          <!-- Logo -->
+
           <div class="text-center mb-5">
-            <i class="bi bi-lightning-charge-fill text-gradient fs-1"></i>
-            <h2 class="h3 fw-bold text-gradient mt-3">Lintage</h2>
+            <i class="bi bi-lightning-charge-fill text-dark fs-1"></i>
+            <h2 class="h3 fw-bold text-dark mt-3">Lintage</h2>
           </div>
 
           <div class="card shadow-hover border-0 p-3 p-md-4">
@@ -57,6 +59,9 @@
                 <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 mb-3" [disabled]="!registerForm.form.valid">
                   <i class="bi bi-box-arrow-in-right me-2"></i>Registrieren
                 </button>
+
+                <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+
 
                 <div class="text-center">
                   <p class="text-muted small mb-0">

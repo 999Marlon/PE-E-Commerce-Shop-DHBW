@@ -1,5 +1,7 @@
 package com.ecommerce.application.usecase.user;
 
+import com.ecommerce.domain.dto.DeleteUserDTO;
+import com.ecommerce.domain.mappers.UserMapper;
 import com.ecommerce.domain.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +16,10 @@ public class DeleteUserUseCase {
         this.userService = userService;
     }
 
-    public void execute(UUID id) {
+    public DeleteUserDTO execute(UUID id) {
         userService.deleteUser(id);
+        return UserMapper.toDeleteDTO(id);
+
     }
 }
 

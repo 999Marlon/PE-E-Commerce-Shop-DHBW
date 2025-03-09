@@ -3,6 +3,7 @@ package com.ecommerce.domain.service;
 import com.ecommerce.domain.entities.Cart;
 import com.ecommerce.domain.entities.Product;
 import com.ecommerce.domain.entities.User;
+import com.ecommerce.domain.exceptions.UserNotFoundException;
 import com.ecommerce.domain.repository.CartRepository;
 import com.ecommerce.domain.repository.ProductRepository;
 import com.ecommerce.domain.repository.UserRepository;
@@ -30,7 +31,7 @@ public class CartService {
 
     public CartDTO addToCart(UUID userId, UUID productId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("Benutzer nicht gefunden"));
     
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> {

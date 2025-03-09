@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <div class="auth-container">
   <div class="row g-0 min-vh-100">
     <div class="col-lg-6 d-none d-lg-block">
@@ -56,6 +58,9 @@
                 <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 mb-3" [disabled]="!loginForm.form.valid">
                   <i class="bi bi-box-arrow-in-right me-2"></i>Anmelden
                 </button>
+
+                <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+
 
                 <div class="text-center">
                   <p class="text-muted small mb-0">

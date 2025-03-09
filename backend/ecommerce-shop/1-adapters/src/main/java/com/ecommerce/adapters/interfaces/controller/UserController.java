@@ -8,6 +8,7 @@ import com.ecommerce.domain.dto.RegisterUserDTO;
 import com.ecommerce.domain.dto.UserDTO;
 import com.ecommerce.domain.entities.User;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,8 +30,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserDTO registerUser(@RequestBody RegisterUserDTO registerUserDTO) {
-        return registerUserUseCase.execute(registerUserDTO);
+    public ResponseEntity<?> registerUser(@RequestBody RegisterUserDTO registerUserDTO) {
+        try {
+            UserDTO registeredUser = registerUserUseCase.execute(registerUserDTO);
+            return ResponseEntity.ok(registeredUser);
+        }
+        catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        
     }
 
     @GetMapping("/{id}")

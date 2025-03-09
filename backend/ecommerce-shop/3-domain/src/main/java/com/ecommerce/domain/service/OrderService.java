@@ -3,6 +3,7 @@ package com.ecommerce.domain.service;
 import com.ecommerce.domain.entities.Order;
 import com.ecommerce.domain.entities.OrderStatus;
 import com.ecommerce.domain.entities.User;
+import com.ecommerce.domain.exceptions.UserNotFoundException;
 import com.ecommerce.domain.repository.CartRepository;
 import com.ecommerce.domain.repository.OrderRepository;
 import com.ecommerce.domain.repository.UserRepository;
@@ -34,7 +35,7 @@ public class OrderService {
     @Transactional
     public OrderDTO placeOrder(UUID userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("Benutzer nicht gefunden"));
 
         var cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));

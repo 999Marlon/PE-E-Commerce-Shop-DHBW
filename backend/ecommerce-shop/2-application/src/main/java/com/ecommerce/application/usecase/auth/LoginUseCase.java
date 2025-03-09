@@ -18,7 +18,6 @@ public class LoginUseCase {
 
     public AuthResponseDTO execute(AuthRequestDTO authRequestDTO) {
         var loginResult = authService.login(authRequestDTO.getEmail(), authRequestDTO.getPassword());
-                return AuthMapper.toDTO(loginResult.getUser(), loginResult.getToken());
-
+        return AuthMapper.toDTO(loginResult.getUser(), loginResult.getToken());
     }
 }

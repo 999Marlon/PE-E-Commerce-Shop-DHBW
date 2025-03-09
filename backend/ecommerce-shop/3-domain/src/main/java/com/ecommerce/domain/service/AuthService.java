@@ -3,6 +3,8 @@ package com.ecommerce.domain.service;
 import com.ecommerce.domain.security.JwtProvider;
 import com.ecommerce.domain.dto.LoginResult;
 import com.ecommerce.domain.entities.User;
+import com.ecommerce.domain.exceptions.InvalidCredentialsException;
+import com.ecommerce.domain.exceptions.UserNotFoundException;
 import com.ecommerce.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,10 @@ public class AuthService {
 
     public LoginResult login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("Benutzer nicht gefunden."));
 
-        if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("Invalid password");
+        if (!user.getPassword().equals(password) || !user.getEmail().equals(email)) {
+            throw new InvalidCredentialsException("Falsche Anmeldedaten. Überprüfen Sie ihr Passwort oder Email Adresse.");
         }
 
         String token = jwtProvider.generateToken(user.getId().toString()); 

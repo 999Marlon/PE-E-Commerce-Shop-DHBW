@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NavbarComponent } from "../../navbar/navbar.component";
 
 @Component({
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NavbarComponent],
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
@@ -22,8 +23,8 @@ export class LoginComponent {
       next: () => {
         this.router.navigate(['/products']);
       },
-      error: () => {
-        this.errorMessage = 'Login fehlgeschlagen. Bitte überprüfe deine Eingaben.';
+      error: (error) => {
+        this.errorMessage = error.error || 'Login fehlgeschlagen';
       },
     });
   }
