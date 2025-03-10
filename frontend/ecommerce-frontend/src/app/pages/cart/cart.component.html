@@ -1,56 +1,54 @@
 <app-navbar></app-navbar>
 
-<div class="container mt-5 py-5">
-    <h2 class="display-5 fw-bold text-center mb-5 text-dark">Ihr Warenkorb</h2>
+<div class="container mt-4">
+  <h2 class="fw-bold mb-4">Ihr Warenkorb</h2>
 
   <div class="row">
-    <div class="col-12 text-center" *ngIf="cartItems.length === 0">
-      <p class="lead text-muted">Ihr Warenkorb ist leer.</p>
-      <a href="/products" class="btn btn-primary mt-3">
-        <i class="bi bi-arrow-left"></i> Weiter einkaufen
-      </a>
+    <div class="col-12 col-md-8">
+      <div *ngIf="cartItems.length === 0" class="text-center py-5">
+        <p class="lead text-muted">Ihr Warenkorb ist leer.</p>
+        <a href="/products" class="btn btn-primary">
+          <i class="bi bi-arrow-left me-2"></i> Weiter einkaufen
+        </a>
+      </div>
+
+      <div *ngFor="let item of cartItems" class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-3">
+              <img [src]="item.product.imageUrl" class="img-fluid rounded" alt="{{ item.product.name }}">
+            </div>
+
+            <div class="col-6">
+              <h5 class="card-title fw-bold mb-2">{{ item.product.name }}</h5>
+              <p class="text-success mb-2">Verfügbar</p>
+              <button class="btn btn-link p-0 text-danger" (click)="removeItem(item.product.id.toString())">
+                <i class="bi bi-trash me-1"></i> Entfernen
+              </button>
+            </div>
+
+            <div class="col-3 text-end">
+              <div class="d-flex align-items-center justify-content-end mb-2">
+                <button class="btn btn-sm btn-outline-secondary px-3" (click)="decreaseAmount(item)">-</button>
+                <span class="mx-3">{{ item.amount }}</span>
+                <button class="btn btn-sm btn-outline-secondary px-3" (click)="increaseAmount(item)">+</button>
+              </div>
+              <p class="text-success fw-bold">{{ item.product.price * item.amount | currency:'EUR' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="col-12" *ngIf="cartItems.length > 0">
-      <table class="table table-hover shadow-sm rounded">
-        <thead class="bg-gradient-primary text-white">
-          <tr>
-            <th>Produkt</th>
-            <th>Preis</th>
-            <th class="text-center">Menge</th>
-            <th class="text-center">Aktion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of cartItems">
-            <td class="align-middle">
-              <div class="d-flex align-items-center">
-                <img [src]="item.product.imageUrl" class="cart-product-img me-3">
-                <span class="fw-bold">{{ item.product.name }}</span>
-              </div>
-            </td>
-            <td class="align-middle text-success fw-bold">
-              {{ item.product.price | currency:'EUR' }}
-            </td>
-            <td class="align-middle text-center">
-              <button class="btn btn-sm btn-outline-secondary px-3" (click)="decreaseAmount(item)">-</button>
-              <span class="mx-3">{{ item.amount }}</span>
-              <button class="btn btn-sm btn-outline-secondary px-3" (click)="increaseAmount(item)">+</button>
-            </td>
-            <td class="align-middle text-center">
-              <button class="btn btn-danger btn-sm px-3" (click)="removeItem(item.product.id.toString())">
-                <i class="bi bi-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="d-flex justify-content-between align-items-center mt-4">
-        <h3 class="fw-bold">Gesamt: <span class="text-success">{{ totalPrice | currency:'EUR' }}</span></h3>
-        <button class="btn btn-lg btn-success rounded-pill px-5 py-3 transition-effect" (click)="checkout()">
-          <i class="bi bi-credit-card me-2"></i> Zur Kasse
-        </button>
+    <div class="col-12 col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title fw-bold mb-3">Gesamtsumme</h5>
+          <p class="text-success fw-bold fs-4 mb-3">{{ totalPrice | currency:'EUR' }}</p>
+          <button class="btn btn-success w-100 py-2" (click)="checkout()">
+            <i class="bi bi-credit-card me-2"></i> Zur Kasse
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -1,23 +1,14 @@
-.cart-product-img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  .table-hover tbody tr:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-  
-  .bg-gradient-primary {
-    background: linear-gradient(135deg, #2b5876, #4e4376) !important;
-  }
-  
-  .transition-effect {
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
-  
+.card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
