@@ -21,7 +21,12 @@
 
             <div class="col-6">
               <h5 class="card-title fw-bold mb-2">{{ item.product.name }}</h5>
-              <p class="text-success mb-2">Verfügbar</p>
+              <p class="text-muted mb-2">{{ item.product.description }}</p>
+              <div class="d-flex align-items-center mb-2">
+                <span class="text-warning me-2">★★★★☆</span>
+                <span class="text-muted">(123 Bewertungen)</span> <!--Nur fürs Design, hier kann man später mal echte Daten anzeigen lassen-->
+              </div>
+              <p class="text-success mb-2">Available</p>
               <button class="btn btn-link p-0 text-danger" (click)="removeItem(item.product.id.toString())">
                 <i class="bi bi-trash me-1"></i> Entfernen
               </button>

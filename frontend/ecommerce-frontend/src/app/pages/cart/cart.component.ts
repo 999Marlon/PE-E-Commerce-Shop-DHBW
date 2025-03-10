@@ -21,6 +21,8 @@ export class CartComponent implements OnInit {
   totalPrice: number = 0;
   userId: string | null = null;
 
+  estimatedDeliveryDate:string =""
+
   constructor(private cartService: CartService, private authService: AuthService, private orderService:OrderService, private router:Router, private productService:ProductsService) {}
 
   ngOnInit(): void {
