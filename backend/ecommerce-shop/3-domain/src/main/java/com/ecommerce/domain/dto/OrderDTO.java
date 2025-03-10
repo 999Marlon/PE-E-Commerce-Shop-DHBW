@@ -3,10 +3,13 @@ package com.ecommerce.domain.dto;
 import java.util.List;
 import java.util.UUID;
 
+import com.ecommerce.domain.valueobjects.Address;
+
 public class OrderDTO {
 
     private UUID id;
     private UUID userId;
+    private Address address;
     private List<UUID> productIds;
     private String status;
     
@@ -33,6 +36,13 @@ public class OrderDTO {
     }
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+    public void setAddress(Address address) {
+        this.address = address;
     }
     
 }

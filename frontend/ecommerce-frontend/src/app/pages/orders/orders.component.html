@@ -17,6 +17,13 @@
         <p class="mb-2">Status: <span class="badge text-dark">{{ order.status }}</span></p>
         <p class="text-muted small">Bestelldatum: {{ order.date }}</p>
 
+        <div class="border p-3 rounded mt-3 bg-light">
+          <h5 class="fw-bold"><i class="bi bi-truck"></i> Lieferadresse</h5>
+          <p class="mb-0">{{ order.address.street }}, {{ order.address.city }}</p>
+          <p>{{ order.address.postalCode }}, {{ order.address.country }}</p>
+        </div>
+
+
         <table class="table table-borderless mt-3">
           <thead class="table-light">
             <tr>

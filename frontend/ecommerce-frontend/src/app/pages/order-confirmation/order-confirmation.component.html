@@ -10,6 +10,12 @@
       <h4 class="text-primary fw-bold">{{ orderId }}</h4>
     </div>
 
+    <div class="border p-3 rounded mt-3 bg-light">
+      <h5 class="fw-bold"><i class="bi bi-truck"></i> Lieferadresse</h5>
+      <p class="mb-0">{{ address.street }}, {{ address.city }}</p>
+      <p>{{ address.postalCode }}, {{ address.country }}</p>
+    </div>
+
     <div class="mt-4 d-flex justify-content-center gap-3">
       <button class="btn btn-primary btn-lg px-4 py-2 transition-effect bi bi-cart-check" (click)="goToOrders()">
         Bestellungen ansehen

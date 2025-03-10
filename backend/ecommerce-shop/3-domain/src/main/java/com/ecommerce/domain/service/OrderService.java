@@ -46,6 +46,7 @@ public class OrderService {
 
         Order order = new Order();
         order.setUser(user);
+        order.setShippingAddress(user.getAddress());
         order.setProducts(cart.getProducts());
         order.setStatus(OrderStatus.PENDING);
 

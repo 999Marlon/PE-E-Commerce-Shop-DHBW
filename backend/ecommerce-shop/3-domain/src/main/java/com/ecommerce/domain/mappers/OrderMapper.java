@@ -11,6 +11,7 @@ public class OrderMapper {
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
         dto.setUserId(order.getUser().getId());
+        dto.setAddress(order.getShippingAddress()); 
         dto.setProductIds(order.getProducts().stream().map(p -> p.getId()).collect(Collectors.toList()));
         dto.setStatus(order.getStatus().name());
         return dto;

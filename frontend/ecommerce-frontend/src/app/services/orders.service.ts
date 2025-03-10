@@ -11,6 +11,7 @@ export interface Order {
   total?: number;
   status: string;
   productIds: string[];
+  address:any;
   products?: {
     id: string;
     name: string;

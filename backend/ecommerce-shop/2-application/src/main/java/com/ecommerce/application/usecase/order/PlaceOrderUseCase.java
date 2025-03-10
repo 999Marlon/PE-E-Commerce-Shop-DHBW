@@ -41,9 +41,10 @@ public class PlaceOrderUseCase {
 
         Order order = new Order();
         order.setUser(user);
+        order.setShippingAddress(user.getAddress());
         order.setProducts(cart.getProducts());
         order.setStatus(OrderStatus.PENDING);
-
+        
         Order savedOrder = orderRepository.save(order);
 
         cartRepository.deleteById(cart.getId());

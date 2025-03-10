@@ -43,7 +43,6 @@ export class OrdersComponent implements OnInit {
         forkJoin(orderRequests).subscribe({
           next: (orderDetails) => {
             this.orders = orderDetails;
-            console.log(this.orders)
           },
           error: (err) => console.error('Fehler beim Laden der Bestellungen:', err)
         });

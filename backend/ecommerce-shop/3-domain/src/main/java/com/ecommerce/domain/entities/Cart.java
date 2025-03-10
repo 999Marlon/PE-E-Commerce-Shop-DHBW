@@ -29,4 +29,10 @@ public class Cart {
         this.user = user;
         this.products = products != null ? products : new ArrayList<>();
     }
+
+    public UUID getId() { return id; }
+
+    public void setId(UUID id) { this.id = id; }
+
+
 }
