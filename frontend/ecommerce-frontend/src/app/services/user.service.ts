@@ -3,6 +3,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
+export interface User {
+  username: string,
+    email: string,
+    password: string,
+    address: {
+      street: string,
+      city: string,
+      postalCode: string,
+      country: string
+    }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,18 +32,17 @@ export class UserService {
     });
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
+  register(username: string, email: string, password: string, address: any): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json' 
     });
   
     return this.http.post(
       `${this.apiUrl}/register`,
-      { username, email, password },
+      { username, email, password, address },
       { headers } 
     );
   }
-
 
   getUserById(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`, { headers: this.getHeaders()});

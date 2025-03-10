@@ -3,6 +3,7 @@ package com.ecommerce.domain.entities;
 import jakarta.persistence.*;
 import java.util.UUID;
 
+import com.ecommerce.domain.valueobjects.Address;
 import com.ecommerce.domain.valueobjects.Email;
 
 @Entity
@@ -16,9 +17,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    //@Embedded
-   // private Address address;
-
+    @Embedded
+    private Address address;
+ 
     @Column(nullable = false, unique = true)
     private Email email;
 
@@ -28,21 +29,24 @@ public class User {
     
     public User() {}
 
-    public User(String username, Email email, String password) {
+    public User(String username, Email email, String password, Address address) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.address = address;
     }
 
     public UUID getId() { return id; }
     public String getUsername() { return username; }
     public Email getEmail() { return email; }
     public String getPassword() { return password; }
+    public Address getAddress() { return address;}
 
     public void setId(UUID id) {this.id = id;}
     public void setUsername(String username) {this.username = username;}
     public void setEmail(Email email) {this.email = email;}
     public void setPassword(String password) {this.password = password;}
+    public void setAddress(Address address) { this.address = address;}
 
     
 }

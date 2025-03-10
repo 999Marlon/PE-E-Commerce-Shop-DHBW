@@ -12,11 +12,11 @@ public class UserMapper {
     private UserMapper() {}
 
     public static UserDTO toDTO(User user) {
-        return new UserDTO(user.getId(), user.getUsername(), user.getEmail());
+        return new UserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getAddress());
     }
 
     public static User toEntity(RegisterUserDTO registerUserDTO) {
-        return new User(registerUserDTO.getUsername(), registerUserDTO.getEmail(), registerUserDTO.getPassword());
+        return new User(registerUserDTO.getUsername(), registerUserDTO.getEmail(), registerUserDTO.getPassword(), registerUserDTO.getAddress());
     }
 
     public static DeleteUserDTO toDeleteDTO(UUID userId) {

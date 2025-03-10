@@ -17,6 +17,12 @@ export class RegisterComponent {
     username: '',
     email: '',
     password: '',
+    address: {
+      street: '',
+      city: '',
+      postalCode: '',
+      country: ''
+    }
   };
 
   errorMessage = '';
@@ -33,7 +39,8 @@ export class RegisterComponent {
   constructor(private userService: UserService, private router: Router) {}
 
   createAccount(): void {
-    this.userService.register(this.credentials.username,this.credentials.email, this.credentials.password ).subscribe({
+    this.userService.register(this.credentials.username,this.credentials.email, this.credentials.password,  this.credentials.address 
+    ).subscribe({
       next: () => {
         this.router.navigate(['/login']);
       },

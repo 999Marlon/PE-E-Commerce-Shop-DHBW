@@ -56,6 +56,28 @@
                   </div>
                 </div>
 
+                <h4 class="h5 fw-bold mt-4">Adresse</h4>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted">Straße und Hausnummer</label>
+                  <input type="text" class="form-control border-0 bg-light" [(ngModel)]="credentials.address.street" name="street" required>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted">Stadt</label>
+                  <input type="text" class="form-control border-0 bg-light" [(ngModel)]="credentials.address.city" name="city" required>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted">Postleitzahl</label>
+                  <input type="text" class="form-control border-0 bg-light" [(ngModel)]="credentials.address.postalCode" name="postalCode" required>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted">Land</label>
+                  <input type="text" class="form-control border-0 bg-light" [(ngModel)]="credentials.address.country" name="country" required>
+                </div>
+
                 <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 mb-3" [disabled]="!registerForm.form.valid">
                   <i class="bi bi-box-arrow-in-right me-2"></i>Registrieren
                 </button>
