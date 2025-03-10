@@ -5,11 +5,13 @@
       <span class="text-gradient">Lintage</span>
     </a>
 
-    <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button class="navbar-toggler shadow-none border-0" type="button"
+      (click)="toggle()" 
+      [attr.aria-expanded]="isCollapsed">
       <i class="bi bi-list text-white fs-2"></i>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" [ngClass]="{'show': isCollapsed}" id="navbarNav">
       <ul class="navbar-nav ms-auto gap-3">
         <li class="nav-item">
           <a class="nav-link hover-underline px-3 py-2 rounded" href="/products">
