@@ -12,6 +12,14 @@
         <relativePath/>
     </parent>
 
+    <properties>
+        <sonar.projectName>PE-E-Commerce-Shop-DHBW</sonar.projectName>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.token>sqp_2f4ae92eaceb0599692ded17048252a4ebf03828</sonar.token>
+    </properties>
+
+
+
     <groupId>com.ecommerce</groupId>
     <artifactId>ecommerce-clean-architecture</artifactId>
     <packaging>pom</packaging>
@@ -43,6 +51,19 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.1.2184</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>sonar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
