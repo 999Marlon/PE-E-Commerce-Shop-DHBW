@@ -16,8 +16,13 @@
         <sonar.projectName>PE-E-Commerce-Shop-DHBW</sonar.projectName>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.token>sqp_2f4ae92eaceb0599692ded17048252a4ebf03828</sonar.token>
+
+        <java.version>17</java.version>
+        <junit.jupiter.version>5.9.3</junit.jupiter.version>
+        <mockito.version>5.2.0</mockito.version>
     </properties>
 
+  
 
 
     <groupId>com.ecommerce</groupId>
