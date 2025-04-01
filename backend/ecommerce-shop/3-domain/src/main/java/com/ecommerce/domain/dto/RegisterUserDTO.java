@@ -1,5 +1,8 @@
 package com.ecommerce.domain.dto;
 
+
+
+import com.ecommerce.domain.entities.Role;
 import com.ecommerce.domain.valueobjects.Address;
 import com.ecommerce.domain.valueobjects.Email;
 
@@ -8,12 +11,14 @@ public class RegisterUserDTO {
     private Email email;
     private String password;
     private Address address;
+    private Role role;
 
-    public RegisterUserDTO(String username, Email email, String password, Address address) {
+    public RegisterUserDTO(String username, Email email, String password, Address address, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.address = address;
+        this.role = role;
     }
 
     public String getUsername() { return username; }
@@ -26,7 +31,9 @@ public class RegisterUserDTO {
     public void setPassword(String password) { this.password = password; }
 
     public Address getAddress() {return address;}
-
     public void setAddress(Address address) {this.address = address;}
+
+    public Role getRole() { return role;}
+    public void setRole(Role role) {this.role = role;}
 }
 

@@ -1,5 +1,6 @@
 package com.ecommerce.domain.service;
 
+import com.ecommerce.domain.entities.Role;
 import com.ecommerce.domain.entities.User;
 import com.ecommerce.domain.exceptions.UserNotFoundException;
 import com.ecommerce.domain.exceptions.UserRegistrationException;
@@ -20,7 +21,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDTO registerUser(User user) {
+    public UserDTO registerUser(User user, boolean isAdmin) {
+
+        if (isAdmin) {
+            user.setRole(Role.ADMIN);  
+        } else {
+            user.setRole(Role.USER);   
+        }
     
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new UserRegistrationException("Diese E-Mail wird bereits verwendet.");
@@ -28,6 +35,7 @@ public class UserService {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new UserRegistrationException("Dieser Benutzername wird bereits verwendet.");
         }
+        
         return UserMapper.toDTO(userRepository.save(user)); 
     }
 
