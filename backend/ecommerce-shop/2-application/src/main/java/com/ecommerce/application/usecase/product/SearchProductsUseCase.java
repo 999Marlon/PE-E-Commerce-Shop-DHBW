@@ -1,7 +1,8 @@
 package com.ecommerce.application.usecase.product;
 
-import com.ecommerce.domain.service.ProductService;
 import com.ecommerce.domain.dto.ProductDTO;
+import com.ecommerce.domain.service.ProductService;
+
 import org.springframework.stereotype.Component;
 
 import java.util.List;
