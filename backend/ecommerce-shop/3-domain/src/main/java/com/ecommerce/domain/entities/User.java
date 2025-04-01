@@ -1,6 +1,9 @@
 package com.ecommerce.domain.entities;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import com.ecommerce.domain.valueobjects.Address;
@@ -30,6 +33,15 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+        name = "user_permissions",
+        joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "permission")
+    @Enumerated(EnumType.STRING)
+    private Set<Permission> permissions = new HashSet<>();
+
     
     public User() {}
 
@@ -47,6 +59,7 @@ public class User {
     public String getPassword() { return password; }
     public Address getAddress() { return address;}
     public Role getRole() { return role; }
+    public Set<Permission> getPermissions() { return permissions;}
 
     public void setId(UUID id) {this.id = id;}
     public void setUsername(String username) {this.username = username;}
@@ -54,5 +67,11 @@ public class User {
     public void setPassword(String password) {this.password = password;}
     public void setAddress(Address address) { this.address = address;}
     public void setRole(Role role) { this.role = role; }
+
+
+
+    public void addPermission(Permission permission) {this.permissions.add(permission);}
+    
+    public void removePermission(Permission permission) {this.permissions.remove(permission);}
 
 }

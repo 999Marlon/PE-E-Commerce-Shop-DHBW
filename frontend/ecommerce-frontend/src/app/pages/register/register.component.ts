@@ -13,6 +13,9 @@ import { Role } from '../../services/user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
+
+  public Role = Role;
+
   credentials = {
     username: '',
     email: '',

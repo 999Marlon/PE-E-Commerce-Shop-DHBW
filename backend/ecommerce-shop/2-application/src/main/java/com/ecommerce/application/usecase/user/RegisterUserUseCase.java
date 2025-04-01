@@ -44,7 +44,7 @@ public class RegisterUserUseCase {
             registerUserDTO.getEmail(),
             registerUserDTO.getPassword(),
             registerUserDTO.getAddress()
-    );
+        );
 
         User savedUser = userRepository.save(user);
         return UserMapper.toDTO(savedUser);

@@ -1,15 +1,22 @@
 package com.ecommerce.domain.factory;
 
+import com.ecommerce.domain.entities.Permission;
 import com.ecommerce.domain.entities.Role;
 import com.ecommerce.domain.entities.User;
-import com.ecommerce.domain.valueobjects.Address;
-import com.ecommerce.domain.valueobjects.Email;
 
 public class DefaultUserFactory extends UserFactory {
 
+    public DefaultUserFactory() {
+        super(Role.USER);
+    }
+
     @Override
-    public User createUser(String username, Email email, String password, Address address) {
-        return new User(username, email, password, address,Role.USER);
+    protected void afterCreation(User user) {
+        user.addPermission(Permission.VIEW_ORDERS);
+        user.addPermission(Permission.PURCHASE_PRODUCTS);
+        
+        System.out.println("Standard-User rechte "+ user.getPermissions());
+        System.out.println("Standard-User erstellt: " + user.getUsername());
     }
     
 }

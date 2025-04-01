@@ -400,6 +400,72 @@ public interface OrderRepository{
 - Falls die Datenbank später geändert wird (z. B. von Postgres auf NoSQL), bleibt die API der Anwendung unverändert.
 - Im generrellen zielt jedoch Clean Architecture darauf ab Abhänigkeiten zu reduzieren
 
+# 6. Entwurfsmuster
+
+## Begründung für den Einsatz des Factory Method Patterns
+
+### 1. Übersicht
+
+In unserem Projekt müssen unterschiedliche Arten von `User`-Objekten erzeugt werden, z. B. Ein normaler Standart-User und Admin-User, die besondere Berechtigungen wie das Löschen von Produkten haben. Hierfür wurde das Entwurfssmuster Factory Patern implementiert.
+
+- Eine abstrakte Basisklasse (UserFactory) kapselt die grundlegende Erzeugungslogik.
+- Konkrete Unterklassen (AdminUserFactory, DefaultUserFactory) entscheiden, welche Rolle (Role) gesetzt wird. Basierend darauf können Berechtigungen erteilt werden.
+
+So wird vermieden, dass der Service oder Controller explizit wissen müssen, wie genau ein Admin-User im Vergleich zu einem Standard-User erzeugt wird.
+
+### 2. Warum wird das Muster an der Stelle eingesetzt?
+
+1. **Kapselung der Erzeugungslogik**  
+   Anstatt bei jeder Instanziierung von User zu entscheiden, ob es sich um einen Admin oder Standard-User handelt, wird diese Entscheidung über konkrete Factory-Klassen getroffen.
+
+2. **Erweiterbarkeit**  
+   Möchten wir neue Rollen einführen (z. B. MODERATOR oder SUPPORT), lässt sich problemlos eine weitere Factory-Klasse ergänzen, ohne vorhandenen Code zu verändern.
+
+
+### 3. Wie verbessert das Muster den Code?
+
+- **Reduzierte Redundanz**  
+  Anstatt in mehreren Klassen immer wieder den gleichen Konstruktor mit anderen Parametern (z. B. `Role.ADMIN` vs. `Role.USER`) aufzurufen, wird der Code in der Basisklasse zentralisiert. Die konkreten Factory-Klassen geben nur noch ihre Spezifika an.
+
+- **Klar strukturierte Verantwortlichkeiten**  
+  Der Service/Controller ist von den Details der Objekt-Initialisierung entkoppelt und ruft lediglich eine gemeinsame Methode (`createUser(...)`) auf.
+
+- **Gute Erweiterbarkeit**  
+  Neue Rollen oder spezielle Logiken lassen sich hinzufügen, indem man eine weitere Unterklasse der abstrakten Factory erstellt (z. B. ModeratorUserFactory).
+
+### 4. Vorteile und Nachteile durch den Einsatz des Musters
+
+#### Vorteile
+
+- **Trennung von Erstellung und Verwendung**  
+  Die Logik, wie ein User-Objekt gebaut wird, ist von der Logik entkoppelt, die dieses Objekt später nutzt oder speichert.  
+- **Erweiterbarkeit**  
+  Man kann leicht zusätzliche Rollen über neue Factories hinzufügen.  
+- **Einheitliche Validierung**  
+  Man kann in der abstrakten Factory Valiedierung einbauen und somit Code Duplikate verhindern.
+
+#### Nachteile
+
+- **Mehr Klassen**  
+  Für jede Benutzer-Rolle (oder jede Variationsstufe) gibt es eine eigene Factory-Klasse. Das kann bei sehr vielen Varianten die Anzahl der Klassen erhöhen.  
+
+
+### 5. Welche Vorteile/Nachteile gäbe es ohne dieses Muster?
+
+#### Vorteile ohne das Muster
+
+- **Einfachheit**  
+  Für ein sehr kleines Projekt könnte man direkt new User(...) aufrufen, wenn die Unterschiede minimal sind. Die Abhängigkeiten wären weniger komplex, da kein eigener Factory-Layer notwendig ist.
+
+### Nachteile ohne das Muster
+
+- **Doppelter Code**  
+  Aufrufe wie `new User(username, email, password, address, Role.ADMIN)` könnten in vielen Klassen redundant werden, sobald mehrere Bereiche der Anwendung Admins erzeugen.  
+- **Schwierige Erweiterung**  
+  Bei neuen Rollen müsste man in allen betroffenen Services/Controllern Änderungen vornehmen, statt nur eine neue Factory-Klasse hinzuzufügen.
+
+
+
 
 
 
