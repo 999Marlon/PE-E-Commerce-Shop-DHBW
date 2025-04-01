@@ -3,6 +3,8 @@ package com.ecommerce.domain.service;
 import com.ecommerce.domain.entities.Cart;
 import com.ecommerce.domain.entities.Product;
 import com.ecommerce.domain.entities.User;
+import com.ecommerce.domain.exceptions.CartNotFoundException;
+import com.ecommerce.domain.exceptions.ProductNotFoundException;
 import com.ecommerce.domain.exceptions.UserNotFoundException;
 import com.ecommerce.domain.repository.CartRepository;
 import com.ecommerce.domain.repository.ProductRepository;
@@ -41,7 +43,7 @@ public class CartService {
                 });
     
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
     
         if (cart.getProducts() == null) {
             cart.setProducts(new ArrayList<>());
@@ -54,12 +56,12 @@ public class CartService {
     public CartDTO getCartByUserId(UUID userId) {
         return cartRepository.findByUserId(userId)
                 .map(CartMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Cart not found for user ID: " + userId));
+                .orElseThrow(() -> new CartNotFoundException("Cart not found for user ID: " + userId));
     }
 
     public CartDTO removeFromCart(UUID userId, UUID productId) {
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Cart not found for user ID: " + userId));
+                .orElseThrow(() -> new CartNotFoundException("Cart not found for user ID: " + userId));
 
         cart.getProducts().removeIf(product -> product.getId().equals(productId));
         return CartMapper.toDTO(cartRepository.save(cart));
@@ -71,10 +73,10 @@ public class CartService {
         }
 
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Cart not found for user ID: " + userId));
+                .orElseThrow(() -> new CartNotFoundException("Cart not found for user ID: " + userId));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
         List<Product> updatedProducts = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {

@@ -6,6 +6,8 @@ import com.ecommerce.domain.dto.ProductDTO;
 import com.ecommerce.domain.mappers.ProductMapper;
 import com.ecommerce.domain.entities.Category;
 import com.ecommerce.domain.entities.Product;
+import com.ecommerce.domain.exceptions.CategoryNotFoundException;
+import com.ecommerce.domain.exceptions.ProductNotFoundException;
 
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,7 @@ public class ProductService {
 
     public ProductDTO addProduct(Product product) {
         if (product.getCategory() == null || product.getCategory().getName() == null) {
-            throw new RuntimeException("Category must not be null");
+            throw new CategoryNotFoundException("Category must not be null");
         }
     
         Category category = categoryRepository.findByName(product.getCategory().getName())
@@ -46,14 +48,14 @@ public class ProductService {
 
     public ProductDTO getProductById(UUID id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
         return ProductMapper.toDTO(product);
     }
     
 
     public ProductDTO updateProduct(UUID productId, Product updatedProduct) {
         Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setDescription(updatedProduct.getDescription());
         existingProduct.setPrice(updatedProduct.getPrice());
@@ -80,7 +82,7 @@ public class ProductService {
 
     public List<ProductDTO> getProductsByCategory(String categoryName) {
         Category category = categoryRepository.findByName(categoryName)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
         List<Product> products = productRepository.findByCategory(category);
         return products.stream()
                 .map(ProductMapper::toDTO)
