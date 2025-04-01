@@ -3,6 +3,8 @@ package com.ecommerce.application.usecase.user;
 import com.ecommerce.domain.entities.Role;
 import com.ecommerce.domain.entities.User;
 import com.ecommerce.domain.exceptions.UserRegistrationException;
+import com.ecommerce.domain.factory.AdminUserFactory;
+import com.ecommerce.domain.factory.DefaultUserFactory;
 import com.ecommerce.domain.factory.UserFactory;
 import com.ecommerce.domain.mappers.UserMapper;
 import com.ecommerce.domain.repository.UserRepository;
@@ -28,15 +30,21 @@ public class RegisterUserUseCase {
         if (userRepository.findByUsername(registerUserDTO.getUsername()).isPresent()) {
             throw new UserRegistrationException("Dieser Benutzername wird bereits verwendet.");
         }
-        User user = UserMapper.toEntity(registerUserDTO);
-
+        UserFactory userFactory;
+        
         if (registerUserDTO.getRole().equals(Role.ADMIN)) {
-            user = UserFactory.createAdminUser(registerUserDTO.getUsername(), registerUserDTO.getEmail(), 
-                    registerUserDTO.getPassword(), registerUserDTO.getAddress());
+            userFactory = new AdminUserFactory();
+
         } else {
-            user = UserFactory.createDefaultUser(registerUserDTO.getUsername(), registerUserDTO.getEmail(),
-                    registerUserDTO.getPassword(), registerUserDTO.getAddress());
+            userFactory = new DefaultUserFactory();
         }
+
+        User user = userFactory.createUser(
+            registerUserDTO.getUsername(),
+            registerUserDTO.getEmail(),
+            registerUserDTO.getPassword(),
+            registerUserDTO.getAddress()
+    );
 
         User savedUser = userRepository.save(user);
         return UserMapper.toDTO(savedUser);
