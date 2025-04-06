@@ -42,31 +42,30 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+        name = "user_permissions",
+        joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "permission")
+    @Enumerated(EnumType.STRING)
+    private Set<Permission> permissions = new HashSet<>();
+
     public User() {}
 
-    public User(String username, Email email, String password, Address address) {
+    public User(String username, Email email, String password, Address address, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.address = address;
+        this.role = role;
     }
-
-    public UUID getId() { return id; }
-    public String getUsername() { return username; }
-    public Email getEmail() { return email; }
-    public String getPassword() { return password; }
-    public Address getAddress() { return address;}
-
-    public void setId(UUID id) {this.id = id;}
-    public void setUsername(String username) {this.username = username;}
-    public void setEmail(Email email) {this.email = email;}
-    public void setPassword(String password) {this.password = password;}
-    public void setAddress(Address address) { this.address = address;}  
-}
 ```
-- User ist eine **Entity**, weil sie eine eindeutige Identität (UUID id) besitzt.
-- Zwei User-Objekte mit demselben Benutzernamen oder derselben E-Mail sind nicht zwangsläufig dieselbe Entität.
+- User ist eine Entity, weil sie eine eindeutige Identität (UUID id) besitzt.
 - User-Daten wie Adresse oder E-Mail können sich über die Zeit ändern.
 
 ### 1.2.2 Value Object: Address
@@ -94,12 +93,11 @@ public class Address {
     public String getCountry() {return country;}
 }
 ```
-- Address ist ein **Value Object**, weil es keine eigene Identität hat.
-- Zwei Address-Objekte mit denselben Werten sind austauschbar.
-- Unveränderlichkeit: Einmal erstellt, sollte eine Adresse nicht verändert werden, sondern durch eine neue ersetzt werden.
+- Address ist ein Value Object, weil es keine eigene Identität hat.
+- Ideal für Wiederverwendung und Vergleich.
 
 ### 1.2.3 Aggregate: User als Root
-- User ist die **Aggregate Root**, da es die Verwaltung von Address als eingebettetes Value Object übernimmt.
+- User ist die Aggregate Root, da es die Verwaltung von Address als eingebettetes Value Object übernimmt.
 - Änderungen an der Adresse erfolgen nur über die User-Entität, um Konsistenz zu gewährleisten.
 
 ### 1.2.4 Repository: UserRepository
@@ -137,14 +135,33 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDTO registerUser(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    public UserDTO registerUser(RegisterUserDTO registerUserDTO) {
+
+        if (userRepository.findByEmail(registerUserDTO.getEmail()).isPresent()) {
             throw new UserRegistrationException("Diese E-Mail wird bereits verwendet.");
         }
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(registerUserDTO.getUsername()).isPresent()) {
             throw new UserRegistrationException("Dieser Benutzername wird bereits verwendet.");
         }
-        return UserMapper.toDTO(userRepository.save(user)); 
+
+        UserFactory userFactory;
+        
+        if (registerUserDTO.getRole().equals(Role.ADMIN)) {
+            userFactory = new AdminUserFactory();
+
+        } else {
+            userFactory = new DefaultUserFactory();
+        }
+
+        User userCreated = userFactory.createUser(
+            registerUserDTO.getUsername(),
+            registerUserDTO.getEmail(),
+            registerUserDTO.getPassword(),
+            registerUserDTO.getAddress()
+        );
+
+        User savedUser = userRepository.save(userCreated);
+        return UserMapper.toDTO(savedUser);
     }
 
     public UserDTO getUserById(UUID id) {
@@ -168,9 +185,57 @@ public class UserService {
     }
 }
 ```
-- UserService ist ein **Domain Service**, weil er geschäftslogische Regeln zur Benutzerregistrierung kapselt.
-- Trennt Geschäftslogik von der User-Entität, indem es Prüfungen wie z. B. doppelte E-Mail ausführt.
+- UserService ist ein Domain Service, weil er geschäftslogische Regeln zur Benutzerregistrierung kapselt.
 - Nutzt UserRepository, um die Datenbankabfragen zu abstrahieren.
+
+### 1.2.6 Data Transfer Object (DTO): UserDTO
+```java
+public class UserDTO {
+
+    private UUID id;
+    private String username;
+    private Email email;
+    private Address address;
+    private Role role;
+
+    
+    public UserDTO(UUID id, String username, Email email, Address address, Role role) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.address = address;
+        this.role = role;
+    }
+}
+```
+Für die Kommunikation zwischen den Schichten wird ein DTO benutzt. Dieses enthält ausschließlich Felder zur Repräsentation der Daten, aber keine Geschäftslogik. Dieses Prinzip wurde benutzt, weil man dadurch
+- interne Entitäten von der Außenwelt entkoppeln kann.
+- verhindern kann, dass versehentlich Zugriff auf sensible Daten wie das Passwort, durchgegührt wird.
+
+### 1.2.6 Mapper: UserMapper
+```java
+public class UserMapper {
+
+    private UserMapper() {}
+
+    public static UserDTO toDTO(User user) {
+        return new UserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getAddress(), user.getRole());
+    }
+
+    public static User toEntity(RegisterUserDTO registerUserDTO) {
+        return new User(registerUserDTO.getUsername(), registerUserDTO.getEmail(), registerUserDTO.getPassword(), registerUserDTO.getAddress(), registerUserDTO.getRole());
+    }
+}
+```
+Ein Mapper konvertiert zwischen DTOs und Entitäten. Hier wird ein statischer Mapper verwendet, um die manuelle Zuordnung durchzuführen.
+
+
+
+
+
+
+
+
 
 # 2. Clean Architecture
 
@@ -185,29 +250,27 @@ Das Projekt ist in folgende Schichten unterteilt:
 ### **Adapter-Schicht (1-adapters)**: 
 - Verantwortlich für die Kapselung von Infrastruktur- und Schnittstellenlogik.
 - Beinhaltet wichtige Komponenten wie:
-  - Controller für den API-Zugriff z. B. REST-Endpunkte.
+  - REST-Controller.
   - JPA Repositories, die als Brücke zur Datenbank fungieren.
-  - Security-Konfigurationen z. B. JWT-basierte Authentifizierung, CORS-Konfiguration für das Frontend.
-- Diese Trennung stellt sicher, dass die Geschäftslogik unabhängig von der Datenbank oder spezifischen externen Abhängigkeiten bleibt.
+  - Security-Konfigurationen wie die JWT-basierte Authentifizierung oder CORS-Konfiguration für das Frontend.
 
 ### **Application-Schicht (2-application)**: 
 - Definiert Use Cases, also spezifische Geschäftsprozesse der Anwendung.
-- Implementiert als*eigenständige Klassen, die das Verhalten der Anwendung steuern.
+- Implementiert als eigenständige Klassen um Erweiterbarkeit zu gewährleisten und vereinfachen
 
-Beispiel: **LoginUseCase**
+Beispiel: **PlaceOrderUseCase**
 ```java
 @Component
-public class LoginUseCase {
+public class PlaceOrderUseCase {
 
-    private final AuthService authService;
+    private final OrderService orderService;
 
-    public LoginUseCase(AuthService authService) {
-        this.authService = authService;
+    public PlaceOrderUseCase(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    public AuthResponseDTO execute(AuthRequestDTO authRequestDTO) {
-        var loginResult = authService.login(authRequestDTO.getEmail(), authRequestDTO.getPassword());
-        return AuthMapper.toDTO(loginResult.getUser(), loginResult.getToken());
+    public OrderDTO execute(UUID userId) {
+        return orderService.placeOrder(userId);
     }
 }
 ```
@@ -226,179 +289,316 @@ Kapselt wiederverwendbare, domänenunabhängige Logik. Ist in meinem Fall leer.
 - Plugins (0-plugins) enthält nur die Main-Methode und übernimmt keine Geschäftslogik.
 - Abstraktionscode (4-abstractioncode) ist aktuell leer, kann aber später für übergreifende Funktionen verwendet werden.
 
+
+
+
+
+
+
 # 3. Programming Principles
 
-## 3.1 Analyse und Begründung für Programming Principles
+## 1. Single Responsibility Principle (SRP – SOLID)
 
-### **1. Single-Responsibility Principle (SRP) – SOLID**
-**Definition:**
-- Das **Single-Responsibility Principle (SRP)** besagt, dass jede Klasse nur eine einzige Verantwortlichkeit haben sollte und nur einen Grund für Änderungen haben darf.
+**Prinzip:**  
+Eine Klasse sollte nur eine einzige Verantwortlichkeit haben. Änderungen an der Klasse sollten nur aus einem Grund nötig sein.
 
-Beispiel aus dem Code: **UserService.java**
+**Anwendung im Projekt:**  
+Der Cart CartQuantityService ist ausschließlich dafür da, um die Anzahl eines Produktes im Warenkorb zu ändern.
+
+**Codeausschnitt:**
+
 ```java
 @Service
-public class UserService {
+public class CartQuantityService {
 
-    private UserRepository userRepository;
-
-    public UserService(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
-
-    public UserDTO registerUser(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new UserRegistrationException("Diese E-Mail wird bereits verwendet.");
+    public void updateQuantity(Cart cart, Product product, int quantity) {
+        List<Product> updatedProducts = new ArrayList<>();
+        for (int i = 0; i < quantity; i++) {
+            updatedProducts.add(product);
         }
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new UserRegistrationException("Dieser Benutzername wird bereits verwendet.");
-        }
-        return UserMapper.toDTO(userRepository.save(user)); 
-    }
-}
-```
-**Begründung:**
-- Die Klasse UserService ist ausschließlich für die Geschäftslogik der Benutzerverwaltung zuständig (Registrierung, Abrufen, Aktualisierung, Löschen).
-- Sie kümmert sich nicht um Datenbankzugriffe oder API-Aufrufe, diese sind über Repositories und Controller ausgelagert.
-- Dadurch bleibt der Code modular und leicht erweiterbar.
 
----
-
-### **2. Open-Closed Principle (OCP) – SOLID**
-**Definition:**
-- Das **Open-Closed Principle (OCP)** besagt, dass eine Software offen für Erweiterung, aber geschlossen für Modifikation sein sollte.
-
-Beispiel aus dem Code: **JwtUtil.java**
-```java
-@Component
-public class JwtUtil implements JwtProvider {
-
-    private final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("MySuperSecureSecretKeyThatIsLongEnoughForHS256".getBytes(StandardCharsets.UTF_8));
-
-    @Override
-    public String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
-                .signWith(SECRET_KEY)
-                .compact();
-    }
-
-    @Override
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        cart.getProducts().removeIf(p -> p.getId().equals(product.getId()));
+        cart.getProducts().addAll(updatedProducts);
     }
     
-    @Override
-    public boolean validateToken(String token, String username) {
-        return (username.equals(extractUsername(token)) && !isTokenExpired(token));
-    }
-
-    private boolean isTokenExpired(String token) {
-        return extractClaim(token, Claims::getExpiration).before(new Date());
-    }
-
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claimsResolver.apply(claims);
-    }
 }
 ```
-und der dazu gehörige **JwtProvider.java**
+**Begründung:**  
+Jede Klasse hat jetzt eine klar abgegrenzte Verantwortung. Das erhöht Testbarkeit, Verständlichkeit und Wartbarkeit.
 
+## 2. Don’t Repeat Yourself (DRY)
+
+**Prinzip:**  
+Wiederhole dich nicht – zentrale Logik, die mehrfach vorkommt, soll an einer Stelle definiert sein.
+
+**Anwendung im Projekt:**  
+Der GlobalExceptionHandler verwaltet Global die Exceptions. Darüber hinaus wurde der String-Literal "error" mehrfach verwendet. Das wurde durch eine Konstante ersetzt.
+
+**Beispiel:**
 ```java
-public interface JwtProvider {
-    String generateToken(String username);
-    String extractUsername(String token);
-    boolean validateToken(String token, String username);
-}
-```
-**Begründung:**
-- JwtUtil implementiert das JwtProvider Interface, was bedeutet, dass neue Token-Mechanismen hinzugefügt werden können, ohne die bestehende Implementierung zu ändern.
-- Falls später in anderer Token-Mechanismus (z. B. OAuth, HMAC, RSA) verwendet werden soll, kann eine neue Implementierung von JwtProvider erstellt werden, anstatt JwtUtil zu modifizieren.
-- Die bestehende Klasse JwtUtil bleibt unverändert (geschlossen für Modifikation), während durch neue Implementierungen von JwtProvider weitere Authentifizierungsmechanismen hinzugefügt werden können (offen für Erweiterung).
-- Dies verhindert harte Abhängigkeiten von JwtUtil in anderen Klassen und erleichtert das Austauschen der Token-Strategie, falls sich Sicherheitsanforderungen ändern.
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
----
+    private static final String ERROR_KEY = "error";
 
-### **3. High Cohesion – GRASP**
-**Definition:**
-- Das Prinzip der **High Cohesion** besagt, dass eine Klasse thematisch zusammenhängende Aufgaben enthalten sollte, um eine hohe Wiederverwendbarkeit und Wartbarkeit zu gewährleisten.
-
-Beispiel aus dem Code: **AuthService.java**
-```java
-@Service
-public class AuthService {
-    private UserRepository userRepository;
-    private JwtProvider jwtProvider;
-
-    public AuthService(UserRepository userRepository, JwtProvider jwtProvider){
-        this.userRepository = userRepository;
-        this.jwtProvider = jwtProvider;
-    }
-
-    public LoginResult login(Email email, String password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("Benutzer nicht gefunden."));
-
-        if (!user.getPassword().equals(password)) {
-            throw new InvalidCredentialsException("Falsche Anmeldedaten. Überprüfen Sie Ihr Passwort oder die E-Mail-Adresse.");
+        @ExceptionHandler(UserRegistrationException.class)
+        public ResponseEntity<Map<String, String>> handleUserRegistrationException(UserRegistrationException ex) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put(ERROR_KEY, ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
+}
+```
+**Begründung:**  
+Einfache Wartbarkeit und Erweiterbarkeit.
 
-        String token = jwtProvider.generateToken(user.getId().toString()); 
-        return new LoginResult(user, token);
+## 3. Low Coupling / High Cohesion (GRASP)
+
+**Prinzip:**  
+- Low Coupling: Klassen sollen möglichst unabhängig voneinander sein.
+
+- High Cohesion: Klassen sollten thematisch fokussiert und logisch zusammenhängend sein.
+
+**Anwendung im Projekt:**  
+Die Aufteilung in einzelne, fachlich fokussierte UseCases wie AddProductToCartUseCase oder UpdateOrderStatusUseCase sorgt für saubere Trennung der Aufgaben.
+
+**Beispiel:**
+```java
+@Component
+public class UpdateOrderStatusUseCase {
+
+    private final OrderService orderService;
+
+    public UpdateOrderStatusUseCase(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public OrderDTO execute(UUID orderId, OrderStatus status) {
+        return orderService.updateOrderStatus(orderId, status);
     }
 }
 ```
-**Begründung:**
-- Die AuthService-Klasse konzentriert sich nur auf Authentifizierungslogik, indem sie Benutzerdaten überprüft und JWT-Tokens generiert.
-- Andere Aufgaben (z. B. Registrierung oder JWT Token Generierung) sind in anderen Klassen gekapselt.
+**Begründung:**  
+Falls sich eine neue Aufgabe ergibt, die implementiert werden muss kann einfach eine neue UseCase erstellt werden, die auf den jeweiligen Service zugreift. Dadurch kann man das Projekt leicht erweitern oder anpassen.
 
+## 4. Controller (GRASP)
 
----
+**Prinzip:**  
+Ein Controller ist zuständig für das Entgegennehmen von Eingaben und Delegieren an die Fachlogik – nicht für Geschäftslogik.
 
-### **4. DRY (Don’t Repeat Yourself)**
-**Definition:**
-- Das **DRY-Prinzip** besagt, dass duplizierter Code vermieden werden soll, indem wiederverwendbare Komponenten geschaffen werden.
+**Anwendung im Projekt:**  
+Die ProductController-Klasse leitet alle Aktionen an spezialisierte UseCases weiter. Keine Geschäftslogik befindet sich im Controller.
 
-Beispiel aus dem Code: **AuthMapper.java**
+**Beispiel:**
 ```java
-public class AuthMapper {
-    public static AuthResponseDTO toDTO(User user, String token) {
-        return new AuthResponseDTO(user.getId(), token);
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+
+    private final GetAllProductsUseCase getAllProductsUseCase;
+    private final GetProductByIdUseCase getProductByIdUseCase;
+    private final UpdateProductUseCase updateProductUseCase;
+    
+    public ProductController(
+        GetAllProductsUseCase getAllProductsUseCase,
+        GetProductByIdUseCase getProductByIdUseCase,
+        UpdateProductUseCase updateProductUseCase){
+            
+        this.getAllProductsUseCase = getAllProductsUseCase;
+        this.getProductByIdUseCase = getProductByIdUseCase;
+        this.updateProductUseCase = updateProductUseCase;
+    }
+
+    @GetMapping
+    public List<ProductDTO> getAllProducts() {
+        return getAllProductsUseCase.execute();
+    }
+
+    @GetMapping("/{id}")
+    public ProductDTO getProductById(@PathVariable UUID id) {
+        return getProductByIdUseCase.execute(id);
+    }
+    
+    @PutMapping("/update/{productId}")
+    public ProductDTO updateProduct(@PathVariable UUID productId, @RequestBody Product updatedProduct) {
+        return updateProductUseCase.execute(productId, updatedProduct);
     }
 }
 ```
-**Begründung:**
-- AuthMapper verhindert, dass die Mapping-Logik mehrfach in verschiedenen Klassen implementiert wird.
-- Statt in jedem Service oder Controller `new AuthResponseDTO(user.getId(), token)` zu schreiben, wird die zentrale `MethodetoDTO()` genutzt.
-- Falls das DTO-Feld später geändert werden muss, ist die Änderung nur an einer Stelle notwendig.
+**Begründung:**  
+Der Controller dient als „Koordinator“, nicht als Logikträger. Die Trennung ist sauber und entspricht dem GRASP-Prinzip „Controller“.
+
+## 5. Open-Closed Principle (OCP – SOLID)
+
+**Prinzip:**  
+Klassen sollten für Erweiterung offen, aber für Modifikation geschlossen sein. Neue Funktionalität sollte ergänzt, nicht überschrieben werden.
+
+**Anwendung im Projekt:**  
+Durch das Factory Pattern (UserFactory, AdminUserFactory, DefaultUserFactory) können neue Benutzerrollen hinzugefügt werden, ohne bestehende Codebasis zu ändern.
+
+**Beispiel:**
+```java
+public abstract class UserFactory {
+
+    private final Role role;
+
+    protected UserFactory(Role role) {
+        this.role = role;
+    }
+
+    public User createUser(String username, Email email, String password, Address address){
+        User user = new User(username, email, password, address, this.role);
+        afterCreation(user);
+        return user;
+    };
+
+    protected void afterCreation(User user) {}
+}
+
+public class AdminUserFactory extends UserFactory{
+
+    public AdminUserFactory() {
+        super(Role.ADMIN);
+    }
+
+    @Override
+    protected void afterCreation(User user) {
+        user.addPermission(Permission.CREATE_PRODUCTS);
+        user.addPermission(Permission.DELETE_PRODUCTS);
+        user.addPermission(Permission.MANAGE_DISCOUNTS);
+    }
+}
+```
+**Begründung:**  
+Neue Rollen (z. B. Support oder Developer) können hinzugefügt werden, ohne den Basiscode zu ändern – Erweiterung statt Änderung.
+
+
+
+
+
+
+# 4. Unit Tests
+Im Projekt wurden ingesamt 17 Unit Tests geschrieben, um die Geschäftslogik zu testen. Dabei kamen JUnit 5.9 und Mockito zum Einsatz, um Abhängigkeiten wie Datenbanken oder externe Services zu mocken.
+
+**Beispiel:**
+```java
+@Test
+void testLoginWithValidCredentials_ShouldReturnLoginResult() {
+
+    Email email = new Email("test@domain.de");
+    String password = "testPassword";
+
+    User mockUser = new User();
+    mockUser.setId(UUID.randomUUID());
+    mockUser.setEmail(email);
+    mockUser.setPassword(password);
+
+    when(userRepository.findByEmail(email)).thenReturn(Optional.of(mockUser));
+    when(jwtProvider.generateToken(anyString())).thenReturn("mocked-jwt-token");
+
+    LoginResult loginResult = authService.login(email, password);
+
+    assertNotNull(loginResult, "LoginResult should not be null.");
+    assertEquals(mockUser, loginResult.getUser(), "Returned user should match the mock user.");
+    assertEquals("mocked-jwt-token", loginResult.getToken(), "Token should match the mocked JWT token.");
+}
+```
+Was wird getestet?
+
+- Ob ein erfolgreicher Login bei gültigen Zugangsdaten möglich ist.
+- Ob der zurückgegebene LoginResult die korrekten Daten enthält.
+- Ob der generierte JWT-Token korrekt gemockt wird.
+
+**Beispiel:**
+```java
+@Test
+void testGetProductById_Found_ShouldReturnProductDTO() {
+
+    UUID productId = UUID.randomUUID();
+        
+    Product mockProduct = new Product();
+    mockProduct.setId(productId);
+    mockProduct.setName("Test Product");
+
+    Category mockCategory = new Category("TestCategory");
+
+    mockProduct.setCategory(mockCategory);
+
+    when(productRepository.findById(productId)).thenReturn(Optional.of(mockProduct));
+
+    ProductDTO result = productService.getProductById(productId);
+
+    assertNotNull(result, "ProductDTO sollte nicht null sein.");
+    assertEquals(productId, result.getId(), "Die ID des DTO sollte mit der des Mock-Products übereinstimmen.");
+    assertEquals("Test Product", result.getName(), "Der Name des DTO sollte 'Test Product' sein.");
+}
+```
+Was wird getestet?
+
+- Ob ein Produkt mit gültiger ID korrekt aus dem Repository geladen wird. 
+- Ob die Rückgabe als ProductDTO korrekt gemappt ist.
+- Ob Name und ID mit dem erwarteten Wert übereinstimmen
+
+Weitere Unit Tests befinden sich im Verzeichnis  
+`backend/ecommerce-shop/3-domain/src/test/java/com/ecommerce/domain/service`
+
+
+
+
+
+
+
+# 5. Refactoring
+
+##  Durchgeführte Refactorings
+
+### 1. Refactoring: Replace Data Value with Object
+In der ursprünglichen Version wurde die E-Mail-Adresse eines Nutzers lediglich als String gespeichert. Diese Implementierung birgt Schwächen, da keinerlei Validierung, Formatierung oder semantische Trennung möglich ist.  
+Zur Verbesserung wurde ein Value Object Email eingeführt, das die E-Mail-Adresse kapselt, validiert und einheitlich behandelt.  
+Dies erhöht die Typsicherheit und sorgt für eine bessere Trennung von Domänenlogik.  
+[Commit-Link](https://github.com/999Marlon/PE-E-Commerce-Shop-DHBW/commit/2b101a03b09c8c24d8b414c555716a9dbf8c796a)
 
 ---
 
-### **5. Low Coupling – GRASP**
-**Definition:**
-- Das **Low Coupling Prinzip** besagt, dass Klassen so wenig Abhängigkeiten wie möglich haben sollten, um Änderungen in einer Klasse nicht auf viele andere Klassen auswirken zu lassen.
+### 2. Refactoring: Extract Class 
+Die Methode `updateProductQuantity(...)` im CartService enthielt umfangreiche Logik zur Berechnung und Manipulation der Produktmenge im Warenkorb.  
+Um die Single Responsibility des Services zu wahren und die Lesbarkeit zu verbessern, wurde diese Logik in eine eigene Klasse CartQuantityService ausgelagert.  
+Damit ist die Verantwortlichkeit klar getrennt, testbarer und besser wartbar.  
+[Commit-Link](https://github.com/999Marlon/PE-E-Commerce-Shop-DHBW/commit/b946538d41f9ebf6cb60bdd77442fc922e6603b3)
 
-Beispiel aus dem Code: **OrderRepository.java**
-```java
-public interface OrderRepository{
-    List<Order> findByUserId(UUID userId);
-    Optional<Order> findById(UUID id);
-    List<Order> findAll();
-    Order save(Order order);
-    void deleteById(UUID uuid);
-}
-```
-**Begründung:**
-- OrderRepository reduziert die Abhängigkeit von konkreten Implementierungen der Datenbanklogik.
-- Jede andere Klasse, die OrderRepository verwendet, kann darauf zugreifen, ohne direkt von der konkreten Persistenztechnologie abhängig zu sein.
-- Falls die Datenbank später geändert wird (z. B. von Postgres auf NoSQL), bleibt die API der Anwendung unverändert.
-- Im generrellen zielt jedoch Clean Architecture darauf ab Abhänigkeiten zu reduzieren
+---
+
+## Identifizierte Code Smells
+
+### 1. Duplicate Code in Use Cases  
+In verschiedenen Use Cases (z. B. UpdateProductQuantity, RemoveProductFromCart) wurde dieselbe Cart-Logik wie in den zugehörigen Services verwendet. Diese Duplikate wurden in den Use Cases entfernt.  [Commit-Link](https://github.com/999Marlon/PE-E-Commerce-Shop-DHBW/commit/f0101bc935a1056ad3d94e6a552b16199ca92209)
+
+---
+
+### 2. Long Parameter List im ProductController  
+Der Konstruktor des ProductController umfasst acht Use Cases als Parameter. Dies erschwert die Lesbarkeit, Testbarkeit und Erweiterbarkeit des Codes.  
+Ein Refactoring wie Introduce Parameter Object oder eine modulare Aufteilung des Controllers könnte hier helfen, die Verantwortung besser zu trennen und den Code zu vereinfachen.
+
+---
+
+### 3. Anemic Domain Model  
+Mehrere Domain-Entitäten (z. B. Cart) enthalten kaum eigene Logik, sondern dienen primär als Datencontainer.  
+Ein typisches Beispiel ist das direkte Hinzufügen eines Produkts per `cart.getProducts().add(product)`, anstatt die Domänenlogik über `cart.addProduct(product)` zu kapseln.  
+Dies widerspricht dem Prinzip des objektorientierten Designs, bei dem das Verhalten eng an die Daten gebunden sein sollte.
+[Commit-Link](https://github.com/999Marlon/PE-E-Commerce-Shop-DHBW/commit/0a334c67f27511a2ef765bd401694fae11964ad3)
+
+---
+
+### 4. Primitive Obsession  
+In mehreren Klassen (z. B. RegisterUserDTO oder User) werden Domänenobjekte wie password oder username als einfache String-Typen verwendet.  
+Dadurch gehen Validierung, Lesbarkeit und Typsicherheit verloren.  
+Ein Refactoring zu Value Objects wie Password oder Username wäre hier sinnvoll, um Wiederverwendbarkeit zu fördern.
+
+
+
+
+
+
 
 # 6. Entwurfsmuster
 
@@ -406,7 +606,7 @@ public interface OrderRepository{
 
 ### 1. Übersicht
 
-In unserem Projekt müssen unterschiedliche Arten von `User`-Objekten erzeugt werden, z. B. Ein normaler Standart-User und Admin-User, die besondere Berechtigungen wie das Löschen von Produkten haben. Hierfür wurde das Entwurfssmuster Factory Patern implementiert.
+In unserem Projekt müssen unterschiedliche Arten von User-Objekten erzeugt werden, z. B. Ein normaler Standart-User und Admin-User, die besondere Berechtigungen wie das Löschen von Produkten haben. Hierfür wurde das Entwurfssmuster Factory Patern implementiert.
 
 - Eine abstrakte Basisklasse (UserFactory) kapselt die grundlegende Erzeugungslogik.
 - Konkrete Unterklassen (AdminUserFactory, DefaultUserFactory) entscheiden, welche Rolle (Role) gesetzt wird. Basierend darauf können Berechtigungen erteilt werden.
@@ -419,7 +619,7 @@ So wird vermieden, dass der Service oder Controller explizit wissen müssen, wie
    Anstatt bei jeder Instanziierung von User zu entscheiden, ob es sich um einen Admin oder Standard-User handelt, wird diese Entscheidung über konkrete Factory-Klassen getroffen.
 
 2. **Erweiterbarkeit**  
-   Möchten wir neue Rollen einführen (z. B. MODERATOR oder SUPPORT), lässt sich problemlos eine weitere Factory-Klasse ergänzen, ohne vorhandenen Code zu verändern.
+   Möchten wir neue Rollen einführen (z. B. Moderator, Support oder Developer), lässt sich problemlos eine weitere Factory-Klasse ergänzen, ohne vorhandenen Code zu verändern.
 
 
 ### 3. Wie verbessert das Muster den Code?
@@ -428,7 +628,7 @@ So wird vermieden, dass der Service oder Controller explizit wissen müssen, wie
   Anstatt in mehreren Klassen immer wieder den gleichen Konstruktor mit anderen Parametern (z. B. `Role.ADMIN` vs. `Role.USER`) aufzurufen, wird der Code in der Basisklasse zentralisiert. Die konkreten Factory-Klassen geben nur noch ihre Spezifika an.
 
 - **Klar strukturierte Verantwortlichkeiten**  
-  Der Service/Controller ist von den Details der Objekt-Initialisierung entkoppelt und ruft lediglich eine gemeinsame Methode (`createUser(...)`) auf.
+  Der Service ist von den Details der Objekt-Initialisierung entkoppelt und ruft lediglich eine gemeinsame Methode (`createUser(...)`) auf.
 
 - **Gute Erweiterbarkeit**  
   Neue Rollen oder spezielle Logiken lassen sich hinzufügen, indem man eine weitere Unterklasse der abstrakten Factory erstellt (z. B. ModeratorUserFactory).
@@ -443,31 +643,6 @@ So wird vermieden, dass der Service oder Controller explizit wissen müssen, wie
   Man kann leicht zusätzliche Rollen über neue Factories hinzufügen.  
 - **Einheitliche Validierung**  
   Man kann in der abstrakten Factory Valiedierung einbauen und somit Code Duplikate verhindern.
-
-#### Nachteile
-
-- **Mehr Klassen**  
-  Für jede Benutzer-Rolle (oder jede Variationsstufe) gibt es eine eigene Factory-Klasse. Das kann bei sehr vielen Varianten die Anzahl der Klassen erhöhen.  
-
-
-### 5. Welche Vorteile/Nachteile gäbe es ohne dieses Muster?
-
-#### Vorteile ohne das Muster
-
-- **Einfachheit**  
-  Für ein sehr kleines Projekt könnte man direkt new User(...) aufrufen, wenn die Unterschiede minimal sind. Die Abhängigkeiten wären weniger komplex, da kein eigener Factory-Layer notwendig ist.
-
-### Nachteile ohne das Muster
-
-- **Doppelter Code**  
-  Aufrufe wie `new User(username, email, password, address, Role.ADMIN)` könnten in vielen Klassen redundant werden, sobald mehrere Bereiche der Anwendung Admins erzeugen.  
-- **Schwierige Erweiterung**  
-  Bei neuen Rollen müsste man in allen betroffenen Services/Controllern Änderungen vornehmen, statt nur eine neue Factory-Klasse hinzuzufügen.
-
-
-
-
-
 
 
 
