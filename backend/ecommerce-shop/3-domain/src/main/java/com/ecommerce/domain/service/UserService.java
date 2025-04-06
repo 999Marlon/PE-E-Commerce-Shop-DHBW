@@ -4,7 +4,11 @@ import com.ecommerce.domain.entities.Role;
 import com.ecommerce.domain.entities.User;
 import com.ecommerce.domain.exceptions.UserNotFoundException;
 import com.ecommerce.domain.exceptions.UserRegistrationException;
+import com.ecommerce.domain.factory.AdminUserFactory;
+import com.ecommerce.domain.factory.DefaultUserFactory;
+import com.ecommerce.domain.factory.UserFactory;
 import com.ecommerce.domain.repository.UserRepository;
+import com.ecommerce.domain.dto.RegisterUserDTO;
 import com.ecommerce.domain.dto.UserDTO;
 import com.ecommerce.domain.mappers.UserMapper;
 
@@ -21,22 +25,33 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDTO registerUser(User user, boolean isAdmin) {
+    public UserDTO registerUser(RegisterUserDTO registerUserDTO) {
 
-        if (isAdmin) {
-            user.setRole(Role.ADMIN);  
-        } else {
-            user.setRole(Role.USER);   
-        }
-    
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(registerUserDTO.getEmail()).isPresent()) {
             throw new UserRegistrationException("Diese E-Mail wird bereits verwendet.");
         }
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(registerUserDTO.getUsername()).isPresent()) {
             throw new UserRegistrationException("Dieser Benutzername wird bereits verwendet.");
         }
+
+        UserFactory userFactory;
         
-        return UserMapper.toDTO(userRepository.save(user)); 
+        if (registerUserDTO.getRole().equals(Role.ADMIN)) {
+            userFactory = new AdminUserFactory();
+
+        } else {
+            userFactory = new DefaultUserFactory();
+        }
+
+        User userCreated = userFactory.createUser(
+            registerUserDTO.getUsername(),
+            registerUserDTO.getEmail(),
+            registerUserDTO.getPassword(),
+            registerUserDTO.getAddress()
+        );
+
+        User savedUser = userRepository.save(userCreated);
+        return UserMapper.toDTO(savedUser);
     }
 
     public UserDTO getUserById(UUID id) {
