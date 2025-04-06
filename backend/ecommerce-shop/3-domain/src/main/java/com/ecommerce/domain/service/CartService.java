@@ -12,10 +12,10 @@ import com.ecommerce.domain.repository.UserRepository;
 import com.ecommerce.domain.dto.CartDTO;
 import com.ecommerce.domain.mappers.CartMapper;
 
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,16 +24,20 @@ public class CartService {
     private CartRepository cartRepository;
     private ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final CartQuantityService cartQuantityService;
 
-    public CartService(CartRepository cartRepository, ProductRepository productRepository, UserRepository userRepository) {
+
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, UserRepository userRepository, CartQuantityService cartQuantityService) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.cartQuantityService = cartQuantityService;
+
     }
 
     public CartDTO addToCart(UUID userId, UUID productId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Benutzer nicht gefunden"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> {
@@ -78,13 +82,8 @@ public class CartService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
-        List<Product> updatedProducts = new ArrayList<>();
-        for (int i = 0; i < quantity; i++) {
-            updatedProducts.add(product);
-        }
+        cartQuantityService.updateQuantity(cart, product, quantity);
 
-        cart.getProducts().removeIf(p -> p.getId().equals(productId));
-        cart.getProducts().addAll(updatedProducts);
 
         return CartMapper.toDTO(cartRepository.save(cart));
     }
