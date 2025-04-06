@@ -5,7 +5,6 @@ import com.ecommerce.domain.entities.Category;
 import com.ecommerce.domain.entities.Product;
 import com.ecommerce.domain.exceptions.CategoryNotFoundException;
 import com.ecommerce.domain.exceptions.ProductNotFoundException;
-import com.ecommerce.domain.mappers.ProductMapper;
 import com.ecommerce.domain.repository.CategoryRepository;
 import com.ecommerce.domain.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,6 @@ import org.mockito.*;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

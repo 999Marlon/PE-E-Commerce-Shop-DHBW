@@ -31,8 +31,11 @@ public class Cart {
     }
 
     public UUID getId() { return id; }
+    public User getUser() { return user; }
+    public List<Product> getProducts() { return products; }
 
     public void setId(UUID id) { this.id = id; }
+    public void setProducts(List<Product> products) { this.products = products; }
 
 
 }

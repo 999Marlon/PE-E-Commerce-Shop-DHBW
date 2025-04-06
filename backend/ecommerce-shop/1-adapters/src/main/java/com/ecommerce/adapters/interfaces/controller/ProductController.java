@@ -29,7 +29,16 @@ public class ProductController {
     private final FilterProductsUseCase filterProductsUseCase;
     private final GetProductsByCategoryUseCase getProductsByCategoryUseCase;
 
-    public ProductController(GetAllProductsUseCase getAllProductsUseCase,AddProductUseCase addProductUseCase,GetProductByIdUseCase getProductByIdUseCase,UpdateProductUseCase updateProductUseCase,DeleteProductUseCase deleteProductUseCase,SearchProductsUseCase searchProductsUseCase,FilterProductsUseCase filterProductsUseCase,GetProductsByCategoryUseCase getProductsByCategoryUseCase) {
+    public ProductController(
+        GetAllProductsUseCase getAllProductsUseCase,
+        AddProductUseCase addProductUseCase,
+        GetProductByIdUseCase getProductByIdUseCase,
+        UpdateProductUseCase updateProductUseCase,
+        DeleteProductUseCase deleteProductUseCase,
+        SearchProductsUseCase searchProductsUseCase,
+        FilterProductsUseCase filterProductsUseCase,
+        GetProductsByCategoryUseCase getProductsByCategoryUseCase) {
+            
         this.getAllProductsUseCase = getAllProductsUseCase;
         this.addProductUseCase = addProductUseCase;
         this.getProductByIdUseCase = getProductByIdUseCase;
