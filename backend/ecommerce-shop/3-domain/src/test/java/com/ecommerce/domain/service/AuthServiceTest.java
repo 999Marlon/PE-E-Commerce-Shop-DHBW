@@ -89,12 +89,11 @@ class AuthServiceTest {
     }
 
     @Test
-void testLoginWithNullEmail_ShouldFail() {
-    Email email = null;
-    String password = "somePassword";
+    void testLoginWithNullEmail_ShouldFail() {
+        Email email = null;
+        String password = "somePassword";
 
-    assertThrows(UserNotFoundException.class, () -> authService.login(email, password),
+        assertThrows(UserNotFoundException.class, () -> authService.login(email, password),
             "Should throw NullPointerException if email is null.");
-}
-
+    }
 }
