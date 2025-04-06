@@ -14,9 +14,6 @@ public class DefaultUserFactory extends UserFactory {
     protected void afterCreation(User user) {
         user.addPermission(Permission.VIEW_ORDERS);
         user.addPermission(Permission.PURCHASE_PRODUCTS);
-        
-        System.out.println("Standard-User rechte "+ user.getPermissions());
-        System.out.println("Standard-User erstellt: " + user.getUsername());
     }
     
 }

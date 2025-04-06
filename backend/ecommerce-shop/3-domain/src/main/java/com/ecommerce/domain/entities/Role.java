@@ -4,18 +4,18 @@ public enum Role {
     ADMIN("ADMIN"),
     USER("USER");
 
-    private final String role;
+    private final String systemRole;
 
-    Role(String role) {
-        this.role = role;
+    Role(String systemRole) {
+        this.systemRole = systemRole;
     }
 
     public String getRole() {
-        return role;
+        return systemRole;
     }
 
     @Override
     public String toString() {
-        return role;
+        return systemRole;
     }
 }
