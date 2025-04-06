@@ -21,7 +21,7 @@ import java.util.Collections;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final String SECRET_KEY = "MySuperSecureSecretKeyThatIsLongEnoughForHS256";
+    private final static String SECRET_KEY = "MySuperSecureSecretKeyThatIsLongEnoughForHS256";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

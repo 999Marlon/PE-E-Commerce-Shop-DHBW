@@ -10,40 +10,40 @@ import jakarta.persistence.Embeddable;
 public class Email {
 
     @JsonValue
-    private final String email;
+    private final String mail;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
     protected Email() {
-        this.email = "";}
+        this.mail = "";}
 
     @JsonCreator
-    public Email(String email) {
-        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+    public Email(String mail) {
+        if (mail == null || !EMAIL_PATTERN.matcher(mail).matches()) {
             throw new IllegalArgumentException("Ungültige E-Mail-Adresse.");
         }
-        this.email = email;
+        this.mail = mail;
     }
 
     public String getEmail() {
-        return email;
+        return mail;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Email email = (Email) o;
-        return Objects.equals(email, email.email);
+        Email mail = (Email) o;
+        return Objects.equals(mail, mail.mail);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(mail);
     }
 
     @Override
     public String toString() {
-        return email;
+        return mail;
     }
 }
 
