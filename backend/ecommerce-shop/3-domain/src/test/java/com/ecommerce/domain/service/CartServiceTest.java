@@ -30,9 +30,13 @@ class CartServiceTest {
 
     @Mock
     private UserRepository userRepository;
-
+    
     @InjectMocks
     private CartService cartService;
+
+    @Spy    
+    private CartQuantityService cartQuantityService;
+
 
     @BeforeEach
     void setUp() {
