@@ -53,7 +53,8 @@ public class CartService {
             cart.setProducts(new ArrayList<>());
         }
     
-        cart.getProducts().add(product);
+        cart.addProduct(product);
+
         return CartMapper.toDTO(cartRepository.save(cart));
     }
     
@@ -67,7 +68,8 @@ public class CartService {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found for user ID: " + userId));
 
-        cart.getProducts().removeIf(product -> product.getId().equals(productId));
+        cart.removeProductById(productId);
+        
         return CartMapper.toDTO(cartRepository.save(cart));
     }
 

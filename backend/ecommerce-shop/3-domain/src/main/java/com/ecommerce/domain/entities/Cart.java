@@ -30,12 +30,18 @@ public class Cart {
         this.products = products != null ? products : new ArrayList<>();
     }
 
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
+    public void removeProductById(UUID productId) {
+        this.products.removeIf(p -> p.getId().equals(productId));
+    }
+
     public UUID getId() { return id; }
     public User getUser() { return user; }
     public List<Product> getProducts() { return products; }
 
     public void setId(UUID id) { this.id = id; }
     public void setProducts(List<Product> products) { this.products = products; }
-
-
 }
