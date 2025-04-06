@@ -1,8 +1,7 @@
 package com.ecommerce.application.usecase.cart;
 
-import com.ecommerce.domain.repository.CartRepository;
+import com.ecommerce.domain.service.CartService;
 import com.ecommerce.domain.dto.CartDTO;
-import com.ecommerce.domain.mappers.CartMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -10,16 +9,14 @@ import java.util.UUID;
 @Component
 public class GetCartUseCase {
 
-    private final CartRepository cartRepository;
+    private final CartService cartService;
 
-    public GetCartUseCase(CartRepository cartRepository) {
-        this.cartRepository = cartRepository;
+    public GetCartUseCase(CartService cartService) {
+        this.cartService = cartService;
     }
 
     public CartDTO execute(UUID userId) {
-        return cartRepository.findByUserId(userId)
-                .map(CartMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Cart not found for user ID: " + userId));
+        return cartService.getCartByUserId(userId);
     }
 }
 

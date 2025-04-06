@@ -1,9 +1,7 @@
 package com.ecommerce.application.usecase.cart;
 
-import com.ecommerce.domain.entities.Cart;
-import com.ecommerce.domain.repository.CartRepository;
+import com.ecommerce.domain.service.CartService;
 import com.ecommerce.domain.dto.CartDTO;
-import com.ecommerce.domain.mappers.CartMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -11,18 +9,14 @@ import java.util.UUID;
 @Component
 public class RemoveProductFromCartUseCase {
 
-    private final CartRepository cartRepository;
+    private final CartService cartService;
 
-    public RemoveProductFromCartUseCase(CartRepository cartRepository) {
-        this.cartRepository = cartRepository;
+    public RemoveProductFromCartUseCase(CartService cartService) {
+        this.cartService = cartService;
     }
 
     public CartDTO execute(UUID userId, UUID productId) {
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Cart not found for user ID: " + userId));
-
-        cart.getProducts().removeIf(product -> product.getId().equals(productId));
-        return CartMapper.toDTO(cartRepository.save(cart));
+        return cartService.removeFromCart(userId, productId);
     }
 }
 
